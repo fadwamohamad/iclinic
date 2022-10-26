@@ -1,0 +1,627 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:iclinic/custom_lib/custom_drop_down/custom_dropdown.dart';
+import 'package:iclinic/dialogs/image_picker.dart';
+import 'package:iclinic/interfaces/success_interface.dart';
+import 'package:iclinic/models/days.dart';
+import 'package:iclinic/response/response_clinic.dart';
+import 'package:iclinic/screens/add_clinic_ui/add_clinic_controller.dart';
+import 'package:iclinic/utils/colors.dart';
+import 'package:iclinic/widgets/cached_network_image.dart';
+import 'package:iclinic/widgets/custom_app_bar.dart';
+import 'package:iclinic/widgets/custom_button.dart';
+import 'package:iclinic/widgets/custom_text.dart';
+import 'package:iclinic/widgets/custom_text_field.dart';
+import 'package:intl/intl.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+
+import '../../utils/helpers.dart';
+
+class AddClinicUi extends StatefulWidget {
+  Clinics? clinic;
+   AddClinicUi({Key? key,this.clinic}) : super(key: key);
+
+  @override
+  State<AddClinicUi> createState() => _AddClinicUiState();
+}
+
+class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
+  Completer<GoogleMapController> _controller = Completer();
+  static List<Day> days = [
+    Day(id: 1, name: "السبت"),
+    Day(id: 2, name: "الأحد"),
+    Day(id: 3, name: "الإثنين"),
+    Day(id: 4, name: "الثلاثاء"),
+    Day(id: 5, name: "الأربعاء"),
+    Day(id: 6, name: "الخميس"),
+    Day(id: 7, name: "الجمعة"),
+  ];
+  final _items =
+      days.map((day) => MultiSelectItem<Day>(day,day.name!)).toList();
+  List<String>? days2;
+  var formKey = GlobalKey<FormState>();
+  late TextEditingController clinicNameController = TextEditingController(text: widget.clinic?.name);
+  late TextEditingController doctorNameController = TextEditingController(text: widget.clinic?.doctorName);
+  late TextEditingController mobileNumController = TextEditingController(text: widget.clinic?.mobileNumber);
+  late TextEditingController phoneNumController = TextEditingController(text: widget.clinic?.telephoneNumber);
+  late TextEditingController emailController = TextEditingController(text: widget.clinic?.email);
+  late TextEditingController whatsappController = TextEditingController(text: widget.clinic?.whatsappNumber);
+  TextEditingController clinicAddress = TextEditingController();
+  TextEditingController clinicSpecialty = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController numOfChairs = TextEditingController();
+  TextEditingController governorateController = TextEditingController();
+  TextEditingController from = TextEditingController();
+  TextEditingController to = TextEditingController();
+  bool numOfChairsVisibility = false;
+  String clinicCard = "";
+  late String clinicLogo = widget.clinic?.logo??"";
+  late AddClinicController controller;
+
+  static const CameraPosition _kGoogle = CameraPosition(
+    target: LatLng(31.243600, 34.232400),
+    zoom: 14.4746,
+  );
+
+  // on below line we have created the list of markers
+  final List<Marker> _markers = <Marker>[
+    const Marker(
+        markerId: MarkerId('1'),
+        position: LatLng(20.42796133580664, 75.885749655962),
+        infoWindow: InfoWindow(
+          title: 'My Position',
+        )),
+  ];
+  late GoogleMapController googleMapController;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    googleMapController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller = AddClinicController(this);
+    getUserCurrentLocation().then((value) async {
+      print(value.latitude.toString() + " " + value.longitude.toString());
+      _markers.add(Marker(
+        markerId: const MarkerId("2"),
+        position: LatLng(value.latitude, value.longitude),
+        infoWindow: const InfoWindow(
+          title: 'My Current Location',
+        ),
+      ));
+      CameraPosition cameraPosition = CameraPosition(
+        target: LatLng(value.latitude, value.longitude),
+        zoom: 14,
+      );
+      final GoogleMapController controller = await _controller.future;
+      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(63.h),
+        child: CustomAppBar(title: 'اضافة عيادة جديدة'),
+      ),
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: EdgeInsetsDirectional.only(
+              top: 37.h, start: 38.w, end: 38.w, bottom: 32.h),
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: MyColors.whiteColor),
+              width: 103.w,
+              height: 103.h,
+              child: IconButton(
+                  onPressed: () {
+                    showImagePicker(context: context,
+                        onResult: (xfile) {
+                          setState(() {
+                            clinicLogo = xfile?.path ?? "";
+                          });
+                        }
+                    );
+
+                  },
+                  icon: widget.clinic != null
+                      ?CustomNetworkImage(image: clinicLogo, height: 103.h, width: 103.w, fit: BoxFit.cover)
+                  :CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    //borderRadius: BorderRadius.circular(50.r),
+                      radius: 40.r,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50.r),
+                          child: CustomNetworkImage(image: clinicLogo, height: 103.h, width: 103.w, fit: BoxFit.cover)))),
+            ),
+            SizedBox(
+              height: 28.h,
+            ),
+            CustomText('اسم العيادة',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            CustomTextField(
+              controller: clinicNameController,
+              hintText: 'ادخل اسم العيادة',
+              textInputType: TextInputType.text,
+              textInputAction: TextInputAction.next,
+            ),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('اسم الطبيب',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            CustomTextField(
+                controller: doctorNameController,
+                hintText: 'ادخل اسم الطبيب',
+                textInputAction: TextInputAction.next,
+                textInputType: TextInputType.text),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('رقم الجوال',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            CustomTextField(
+                controller: mobileNumController,
+                hintText: 'ادخل رقم الجوال',
+                textInputAction: TextInputAction.next,
+                textInputType: TextInputType.phone),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('رقم الهاتف',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            CustomTextField(
+                controller: phoneNumController,
+                hintText: 'رقم الهاتف',
+                textInputAction: TextInputAction.next,
+                textInputType: TextInputType.phone),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('رقم واتس اب',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            CustomTextField(
+                controller: whatsappController,
+                hintText: 'رقم واتس اب للعيادة',
+                textInputAction: TextInputAction.next,
+                textInputType: TextInputType.phone),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('البريد الإلكتروني',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            CustomTextField(
+                controller: emailController,
+                hintText: 'البريد الإلكتروني',
+                textInputAction: TextInputAction.next,
+                textInputType: TextInputType.emailAddress),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('صورة كرت العيادة',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            Material(
+              elevation: 5,
+              shadowColor: MyColors.grey6Color,
+              borderRadius: BorderRadius.circular(10.r),
+              child: Container(
+                height: 185.h,
+                width: 352.w,
+                decoration: BoxDecoration(
+                  color: MyColors.whiteColor,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          showImagePicker(
+                              context: context,
+                              onResult: (xfile) {
+                                setState(() {
+                                  clinicCard = xfile?.path ?? "";
+                                });
+                              });
+                        },
+                        child: CustomNetworkImage(
+                            image: clinicCard,
+                            height: 100,
+                            width: 200,
+                            fit: BoxFit.cover)),
+                    SizedBox(
+                      height: 16.h,
+                    ),
+                    CustomText('حمل صورة كرت العيادة هنا',
+                        color: MyColors.hintColor, size: 12)
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('أيام الدوام',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            Material(
+              elevation: 5,
+              shadowColor: MyColors.grey6Color,
+              borderRadius: BorderRadius.circular(10.r),
+              child: MultiSelectDialogField(
+                  items: _items,
+                  title: const Text("أيام الدوام"),
+                  backgroundColor: MyColors.whiteColor,
+                  buttonIcon: Icon(
+                    Icons.add,
+                    size: 18.sp,
+                    color: MyColors.hintColor,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: MyColors.whiteColor),
+                  dialogHeight: 400.h,
+                  buttonText: Text(
+                    'أيام الدوام',
+                    style: TextStyle(
+                        fontSize: 12.sp,
+                        color: MyColors.hintColor,
+                        fontFamily: 'regular'),
+                  ),
+                  validator: (values) {
+                    if (values == null || values.isEmpty) {
+                      return "مطلوب";
+                    }
+                  },
+                  onConfirm: (ddd) {
+                    for(int i = 0; i<ddd.length;i++){
+                      Day hhhh=ddd[i] as Day;
+                      days2?.add(hhhh.name??"");
+                    }
+
+                  }),
+            ),
+            SizedBox(
+              height: 18.h,
+            ),
+            Row(
+              children: [
+                Expanded(child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText('من:',
+                        color: MyColors.textColor,
+                        size: 12,
+                        padding: EdgeInsetsDirectional.only(start: 17.w)
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    CustomTextField(controller: from,
+                      onTap: (){
+                        showTimePicker(
+                            context: context, initialTime: TimeOfDay.now())
+                            .then((value) {
+                          from.text = Helpers.formatTimeOfDay(value!, DateFormat.Hm());
+                        });
+                      },
+                    ),
+                  ],
+                )),
+                SizedBox(width: 10.w,),
+                Expanded(child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText('إلى:',
+                        color: MyColors.textColor,
+                        size: 12,
+                        padding: EdgeInsetsDirectional.only(start: 17.w)
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    CustomTextField(controller: to,
+                      onTap: (){
+                        showTimePicker(
+                            context: context, initialTime: TimeOfDay.now())
+                            .then((value) {
+                          to.text = Helpers.formatTimeOfDay(value!, DateFormat.Hm());
+                        });
+                      },
+                    ),
+                  ],
+                )),
+              ],
+            ),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('تخصص العيادة',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            Material(
+              elevation: 5,
+              shadowColor: MyColors.grey6Color,
+              borderRadius: BorderRadius.circular(10.r),
+              child: CustomDropdown(
+                  items: const ['أسنان', 'xzx'],
+                  controller: clinicSpecialty,
+                  inColor: MyColors.whiteColor,
+                  outLineBorder: true,
+                  hintText: 'تخصص العيادة',
+                  borderRadius: BorderRadius.circular(10.r),
+                  onChanged: (val) {
+                    if (val == 'أسنان') {
+                      setState(() {
+                        numOfChairsVisibility = true;
+                      });
+                    } else {
+                      setState(() {
+                        numOfChairsVisibility = false;
+                      });
+                    }
+                  },
+                  myVoidCallback: (nbn) {}),
+            ),
+            Visibility(
+                visible: numOfChairsVisibility,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 18.h,
+                    ),
+                    CustomText('عدد الكراسي',
+                        color: MyColors.textColor,
+                        size: 12,
+                        padding: EdgeInsetsDirectional.only(start: 17.w)),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    CustomTextField(
+                        controller: numOfChairs,
+                        hintText: 'عدد الكراسي',
+                        textInputType: TextInputType.number),
+                  ],
+                )),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('الضفة/غزة',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            Material(
+              elevation: 5,
+              shadowColor: MyColors.grey6Color,
+              borderRadius: BorderRadius.circular(10.r),
+              child: CustomDropdown(
+                items: ['الضفة', 'غزة'],
+                controller: cityController,
+                myVoidCallback: (m) {},
+                inColor: MyColors.whiteColor,
+                outLineBorder: true,
+                hintText: 'الضفة/غزة',
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('المحافظة',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            Material(
+              elevation: 5,
+              shadowColor: MyColors.grey6Color,
+              borderRadius: BorderRadius.circular(10.r),
+              child: CustomDropdown(
+                items: [],
+                controller: governorateController,
+                myVoidCallback: (m) {},
+                inColor: MyColors.whiteColor,
+                outLineBorder: true,
+                hintText: 'المحافظة',
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('عنوان العيادة',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            CustomTextField(
+                controller: clinicAddress,
+                hintText: 'اكتب عنوان العيادة',
+                textInputType: TextInputType.text),
+            SizedBox(
+              height: 18.h,
+            ),
+            CustomText('موقع العيادة',
+                color: MyColors.textColor,
+                size: 12,
+                padding: EdgeInsetsDirectional.only(start: 17.w)),
+            SizedBox(
+              height: 5.h,
+            ),
+            Container(
+              height: 217.h,
+              width: 352.w,
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
+              child: GoogleMap(
+                initialCameraPosition: _kGoogle,
+                zoomControlsEnabled: false,
+                myLocationButtonEnabled: false,
+                markers: Set<Marker>.of(_markers),
+                trafficEnabled: true,
+                gestureRecognizers: Set()
+                  ..add(Factory<EagerGestureRecognizer>(
+                      () => EagerGestureRecognizer())),
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+              ),
+            ),
+            SizedBox(
+              height: 46.h,
+            ),
+            CustomButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  controller.addClinic({
+                    "name" : clinicNameController.text,
+                    "doctor_name": doctorNameController.text,
+                    "mobile_number": mobileNumController.text,
+                    "telephone_number": phoneNumController.text,
+                    "email": emailController.text.isEmpty,
+                    "whatsapp_number": whatsappController.text,
+                    "location": clinicAddress.text,
+                    "clinic_type": clinicSpecialty.text,
+                    "clinic_chairs": numOfChairs.text
+                  });
+                }
+              },
+              text: 'اضافة عيادة',
+              color: MyColors.greenColor,
+              radius: 10,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+      print("ERROR" + error.toString());
+    });
+    return await Geolocator.getCurrentPosition();
+  }
+
+  @override
+  void onSuccess(dynamic) {
+    // TODO: implement onSuccess
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.all(Radius.circular(10.0.r))),
+              content: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r)),
+                padding: EdgeInsetsDirectional.only(
+                    start: 39.w, end: 39.w),
+                height: 292.h,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                    Image.asset(
+                      'assets/images/clinic_added_successfully.png',
+                      height: 100.h,
+                      width: 100.w,
+                    ),
+                    SizedBox(
+                      height: 26.h,
+                    ),
+                    CustomText('تم اضافة العيادة بنجاح',
+                        size: 20.sp,
+                        fontFamily: 'bold',
+                        color: MyColors.mainColor,
+                        fontWeight: FontWeight.w700),
+                    SizedBox(
+                      height: 45.h,
+                    ),
+                    CustomButton(
+                      onPressed: () {},
+                      color: MyColors.greenColor,
+                      text: 'موافق',
+                      height: 40.h,
+                      radius: 10,
+                      fontSize: 13,
+                      fontFamily: 'regular',
+                    ),
+                  ],
+                ),
+              ));
+        });
+  }
+}
