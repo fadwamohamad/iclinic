@@ -102,12 +102,10 @@ class _VisitInsideUiState extends State<VisitInsideUi> {
                       navigateTo(
                           context,
                           VisitReportUi(
-                            clinicName: widget.clinicName,
+                            item: controller.cliniVisits[index],
                             logo: widget.logo,
+                            clinicName: widget.clinicName,
                             doctorName: widget.doctorName,
-                            visitNum: controller.cliniVisits[index].visitNumber,
-                            visitDate: controller.cliniVisits[index].visitDate,
-                            visitTime: controller.cliniVisits[index].beginVisit,
                           ));
                     });
               },

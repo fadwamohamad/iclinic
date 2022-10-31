@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:iclinic/response/response_add_visit.dart';
+import 'package:iclinic/response/response_clinic_visits.dart';
 
 import '../../interfaces/success_interface.dart';
 import '../../response/response_add_clinic.dart';
@@ -20,7 +21,7 @@ class VisitReportController  with Helpers {
     try{
 
       showLoading();
-      BaseResponse<ResponseVisit>? response =
+      BaseResponse<VisitDetail>? response =
       await Apis().updateVisitResport(map, visitId);
       dismissLoading();
       if (response!.status) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iclinic/interfaces/success_interface.dart';
+import 'package:iclinic/response/verification_token.dart';
 import 'package:iclinic/screens/forget_password_ui/forget_password_controller.dart';
 import 'package:iclinic/widgets/navigation.dart';
 
@@ -8,7 +9,7 @@ import '../../utils/colors.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text.dart';
 import '../../widgets/custom_text_field.dart';
-import '../verification_ui/forget_pass_ui.dart';
+import '../verification_ui/verification.dart';
 
 class ForgetPasswordUi extends StatefulWidget {
   const ForgetPasswordUi({Key? key}) : super(key: key);
@@ -70,12 +71,8 @@ class _ForgetPasswordUiState extends State<ForgetPasswordUi>
               CustomButton(
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                    //navigateTo(context,  ResetPassUi(tokenx: pinCodeController.text,));
-                    bool b = await controller
+                     await controller
                         .forgetPassword(mobileNumController.text);
-                    if (b) {
-                      navigateTo(context, VerificationUi());
-                    }
                   }
                 },
                 text: 'إرسال',
@@ -92,5 +89,7 @@ class _ForgetPasswordUiState extends State<ForgetPasswordUi>
   @override
   void onSuccess(dynamic) {
     // TODO: implement onSuccess
+    ResponseVerification re= dynamic as ResponseVerification;
+    navigateTo(context, VerificationUi(token: re.token,));
   }
 }

@@ -1,3 +1,5 @@
+import 'package:iclinic/interfaces/success_interface.dart';
+
 import '../../response/response_user.dart';
 import '../../services/BaseResponse.dart';
 import '../../services/apis.dart';
@@ -6,46 +8,60 @@ import '../../utils/helpers.dart';
 import '../../utils/user_preference.dart';
 
 class ResetPassContoller with Helpers{
-  Future<bool> resetPass(
-      String token,
+  SuccessInterface view;
+  ResetPassContoller(this.view);
+  resetPass(
       String newPass,
       String confirmPass,
       ) async {
     showLoading();
     Map<String, dynamic> map = <String, dynamic>{};
-    map["token"] = token;
     map["password"] = newPass;
     map["password_confirmation"] = confirmPass;
-    try {
-      BaseResponse<ResponseUser>? response = await Apis().reset_password<ResponseUser>(map);
-
-      if (response != null) {
-        if (response.status) {
-          UserPreferences().addBoolToSF(Constants.isLogged, true);
-          print('kkmmmm${response.status}');
-          dismissLoading();
-          return response.status;
-        } else {
-          dismissLoading();
-          showMessage(response.msg??"");
-          return response.status;
-        }
+    //try {
+      BaseResponse? response = await Apis().reset_password<ResponseUser>(map);
+    dismissLoading();
+    if (response != null) {
+      if (response.status) {
+        UserPreferences().addBoolToSF(Constants.isLogged, true);
+        view.onSuccess(response.result);
+        showMessage(response.msg??"");
       } else {
-        dismissLoading();
-        showMessage("Response Error");
-        return false;
+        //view.onError(response.msg!);
+        showMessage(response.msg??"");
       }
-    } on Exception catch (exception) {
-      print(exception);
+    }else{
       dismissLoading();
-      showMessage("Exception Login");
-      return false;
-    } catch (error) {
-      print(error);
-      dismissLoading();
-      showMessage(error.toString());
-      return false;
+      showMessage("Response Error",error: true);
     }
+
+    //   if (response != null) {
+    //     if (response.status) {
+    //       UserPreferences().addBoolToSF(Constants.isLogged, true);
+    //       print('kkmmmm${response.status}');
+    //       dismissLoading();
+    //       return response.status;
+    //     } else {
+    //       dismissLoading();
+    //       showMessage(response.msg??"");
+    //       return response.status;
+    //     }
+    //   } else {
+    //     dismissLoading();
+    //     showMessage("Response Error");
+    //     return false;
+    //   }
+    // } on Exception catch (exception) {
+    //   print(exception);
+    //   dismissLoading();
+    //   showMessage("Exception Login");
+    //   return false;
+    // } catch (error) {
+    //   print(error);
+    //   dismissLoading();
+    //   showMessage(error.toString());
+    //   return false;
+    // }
 
 
   }

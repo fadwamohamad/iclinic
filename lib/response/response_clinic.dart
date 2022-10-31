@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 class Clinics {
   int? id;
   String? name;
@@ -6,11 +8,18 @@ class Clinics {
   String? mobileNumber;
   String? telephoneNumber;
   String? email;
-  String? logo;
   String? whatsappNumber;
-  String? location;
-  String? clinicType;
+  String? address;
   String? clinicChairs;
+  String? clinicTypeId;
+  String? longitude;
+  String? latitude;
+  String? timeStart;
+  String? timeEnd;
+  List<String>? workdays;
+  String? logoUrl;
+  String? businessCardUrl;
+  int? cityId;
 
   Clinics(
       {this.id,
@@ -19,11 +28,18 @@ class Clinics {
         this.mobileNumber,
         this.telephoneNumber,
         this.email,
-        this.logo,
         this.whatsappNumber,
-        this.location,
-        this.clinicType,
-        this.clinicChairs});
+        this.address,
+        this.clinicChairs,
+        this.clinicTypeId,
+        this.longitude,
+        this.latitude,
+        this.timeStart,
+        this.timeEnd,
+        this.workdays,
+        this.logoUrl,
+        this.cityId,
+        this.businessCardUrl});
 
   Clinics.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,11 +48,29 @@ class Clinics {
     mobileNumber = json['mobile_number'];
     telephoneNumber = json['telephone_number'];
     email = json['email'];
-    logo = json['logo'];
     whatsappNumber = json['whatsapp_number'];
-    location = json['location'];
-    clinicType = json['clinic_type'];
+    address = json['address'];
     clinicChairs = json['clinic_chairs'];
+    clinicTypeId = json['clinic_type_id'];
+    longitude = json['longitude'];
+    latitude = json['latitude'];
+    timeStart = json['time_start'];
+    timeEnd = json['time_end'];
+    workdays = json['all_work_days'].cast<String>();
+    //json["all_work_days"] == null ? null : List<String>.from(json["all_work_days"].map((x) => x));
+    // workdays = json["all_work_days"] == null? [] : List<String>.from(json["all_work_days"].map((dynamic) => dynamic));
+   //    json['all_work_days'].cast<String>();
+   //  if (json['all_work_days'] != null) {
+   //    workdays = <String>[];
+   //    print(json["all_work_days"]);
+   //   // workdays=List<String>.from(json["all_work_days"].map((x) => x));
+   //
+   //  }workdays = (json["all_work_days"] as List<String>).cast<String>();
+
+   // workdays = json['all_work_days'];
+    logoUrl = json['logo_url'];
+    businessCardUrl = json['business_card_url'];
+    cityId = json['city_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -44,14 +78,22 @@ class Clinics {
     data['id'] = id;
     data['name'] = name;
     data['doctor_name'] = doctorName;
-    data['mobile_number'] = this.mobileNumber;
-    data['telephone_number'] = this.telephoneNumber;
-    data['email'] = this.email;
-    data['logo'] = this.logo;
-    data['whatsapp_number'] = this.whatsappNumber;
-    data['location'] = this.location;
-    data['clinic_type'] = this.clinicType;
-    data['clinic_chairs'] = this.clinicChairs;
+    data['mobile_number'] = mobileNumber;
+    data['telephone_number'] = telephoneNumber;
+    data['email'] = email;
+    data['whatsapp_number'] = whatsappNumber;
+    data['address'] = address;
+    data['clinic_chairs'] = clinicChairs;
+    data['clinic_type_id'] = clinicTypeId;
+    data['longitude'] = longitude;
+    data['latitude'] = latitude;
+    data['time_start'] = timeStart;
+    data['time_end'] = timeEnd;
+    data['all_work_days'] =  workdays;
+    data['all_work_days'] = workdays;
+    data['logo_url'] = logoUrl;
+    data['business_card_url'] = businessCardUrl;
+    data['city_id'] = cityId;
     return data;
   }
 }

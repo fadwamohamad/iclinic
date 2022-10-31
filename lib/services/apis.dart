@@ -1,12 +1,16 @@
 import 'dart:io';
-
 import 'package:iclinic/response/response_add_clinic.dart';
 import 'package:iclinic/response/response_add_visit.dart';
+import 'package:iclinic/response/response_area.dart';
+import 'package:iclinic/response/response_city.dart';
+import 'package:iclinic/response/response_clinic_type.dart';
 import 'package:iclinic/response/response_clinic_visits.dart';
+import 'package:iclinic/response/response_user.dart';
 import 'package:iclinic/services/BaseResponseList.dart';
 
 import '../response/response_clinic.dart';
 import '../response/response_visit.dart';
+import '../response/verification_token.dart';
 import 'BaseResponse.dart';
 import 'webservice.dart';
 
@@ -21,15 +25,20 @@ class Apis {
     BaseResponse<T>? response = await Webservice().post("auth/login", body: map);
     return response;
   }
-  Future<BaseResponse<T>?> forget_password<T>(Map<String, dynamic> map) async {
-    BaseResponse<T>? response =
-    await Webservice().post("auth/forgot-password", body: map);
+  Future<BaseResponse<ResponseVerification>?> forget_password<T>(Map<String, dynamic> map) async {
+    BaseResponse<ResponseVerification>? response =
+    await Webservice().post("auth/password/mobile", body: map);
+    return response;
+  }
+  Future<BaseResponse<ResponseUser>?> code_check <T>(Map<String, dynamic> map) async {
+    BaseResponse<ResponseUser>? response =
+    await Webservice().post("auth/password/code/check", body: map);
     return response;
   }
 
   Future<BaseResponse<T>?> reset_password<T>(Map<String, dynamic> map) async {
     BaseResponse<T>? response =
-    await Webservice().post("auth/reset-password", body: map);
+    await Webservice().post("password/reset", body: map);
     return response;
   }
 
@@ -42,13 +51,18 @@ class Apis {
     return response;
   }
 
-  Future<BaseResponse<ResponseClinic2>?> addClinic(Map<String, dynamic> map,
+  Future<BaseResponse<Clinics>?> addClinic(Map<String, dynamic> map,
       {File? logoImage,File? cardImage }) async {
-    BaseResponse<ResponseClinic2>? response = await Webservice()
+    BaseResponse<Clinics>? response = await Webservice()
         .postFile("clinics", body: map,logoImage: logoImage,cardImage: cardImage);
     return response!;
   }
-
+  Future<BaseResponse<Clinics>?> updateClinic(Map<String, dynamic> map,int clinicId,
+      {File? logoImage,File? cardImage }) async {
+    BaseResponse<Clinics>? response = await Webservice()
+        .putFile("clinics/$clinicId", body: map,logoImage: logoImage,cardImage: cardImage);
+    return response!;
+  }
 
 
   Future<BaseResponse<ResponseVisit>?> addVisit(Map<String, dynamic> map) async {
@@ -79,9 +93,24 @@ class Apis {
         .get("visits/$clinicId");
     return response;
   }
-  Future<BaseResponse<ResponseVisit>?> updateVisitResport(Map<String, dynamic> map,int visitId) async {
-    BaseResponse<ResponseVisit>? response = await Webservice()
-        .put("visits/$visitId");
+  Future<BaseResponse<VisitDetail>?> updateVisitResport(Map<String, dynamic> map,int visitId) async {
+    BaseResponse<VisitDetail>? response = await Webservice()
+        .put("visits/$visitId",body: map);
+    return response;
+  }
+  Future<BaseResponse<ResponseArea>?> getCountries() async {
+    BaseResponse<ResponseArea>? response =
+    await Webservice().get("areas");
+    return response;
+  }
+  Future<BaseResponse<ResponseCity>?> getCities(int id) async {
+    BaseResponse<ResponseCity>? response =
+    await Webservice().get("areas/$id");
+    return response;
+  }
+  Future<BaseResponse<ResponseClinicsType>?> getCategory() async {
+    BaseResponse<ResponseClinicsType>? response =
+    await Webservice().get("clinics-type");
     return response;
   }
 

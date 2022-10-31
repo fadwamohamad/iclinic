@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iclinic/screens/login_ui/login_ui.dart';
+import 'package:iclinic/interfaces/success_interface.dart';
+import 'package:iclinic/screens/main_ui/main_ui.dart';
 import 'package:iclinic/screens/reset_pass_ui/reset_pass_controller.dart';
-import 'package:iclinic/widgets/navigation.dart';
-
 import '../../utils/colors.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text.dart';
 import '../../widgets/custom_text_field.dart';
 
 class ResetPassUi extends StatefulWidget {
-  String tokenx;
-   ResetPassUi({Key? key,required this.tokenx}) : super(key: key);
+   ResetPassUi({Key? key}) : super(key: key);
 
   @override
   State<ResetPassUi> createState() => _ResetPassUiState();
 }
 
-class _ResetPassUiState extends State<ResetPassUi> {
+class _ResetPassUiState extends State<ResetPassUi> implements SuccessInterface {
   var formLoginKey = GlobalKey<FormState>();
   TextEditingController passController = TextEditingController();
   TextEditingController confirmPassController = TextEditingController();
@@ -27,7 +25,7 @@ class _ResetPassUiState extends State<ResetPassUi> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    resetPassContoller = ResetPassContoller();
+    resetPassContoller = ResetPassContoller(this);
   }
   @override
   Widget build(BuildContext context) {
@@ -83,13 +81,9 @@ class _ResetPassUiState extends State<ResetPassUi> {
               CustomButton(
                 onPressed: () async{
                   if (formLoginKey.currentState!.validate()) {
-                    bool reset = await resetPassContoller.resetPass(
-                        widget.tokenx,
+                     await resetPassContoller.resetPass(
                         passController.text,
                         confirmPassController.text);
-                    if(reset){
-                    navigateTo(context, const LoginUi());
-                    }
                   }
                 },
                 text: 'تأكيد',
@@ -101,5 +95,11 @@ class _ResetPassUiState extends State<ResetPassUi> {
         ),
       ),
     );
+  }
+
+  @override
+  void onSuccess(dynamic) async{
+    // TODO: implement onSuccess
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainUi()));
   }
 }

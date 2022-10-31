@@ -53,7 +53,7 @@ class _ClinicsUiState extends State<ClinicsUi> with AutomaticKeepAliveClientMixi
                     pullToRefresh: true,
                     itemBuilder: (context, index) {
                       return clinicsItem(
-                        imageUrl: controller.clinics[index].logo,
+                        imageUrl: controller.clinics[index].logoUrl,
                           doctorName: controller.clinics[index].doctorName,
                           clinicName: controller.clinics[index].name,
                           onEdit: () {

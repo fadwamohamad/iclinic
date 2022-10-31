@@ -200,5 +200,6 @@ class _AddVisitUiState extends State<AddVisitUi> implements SuccessInterface {
   @override
   void onSuccess(dynamic) {
     // TODO: implement onSuccess
+    Navigator.pop(context);
   }
 }

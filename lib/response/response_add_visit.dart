@@ -18,11 +18,11 @@ class ResponseVisit {
 }
 
 class Visit {
-  String? visitNumber;
+  int? visitNumber;
   String? visitDate;
   String? beginVisit;
   String? endVisit;
-  String? clinicId;
+  int? clinicId;
   int? userId;
 
   Visit(

@@ -1,5 +1,7 @@
 
 
+import 'package:iclinic/response/response_clinic_type.dart';
+
 class Visits {
   int? id;
   String? name;
@@ -9,7 +11,7 @@ class Visits {
   String? email;
   String? whatsappNumber;
   String? location;
-  String? clinicType;
+  ClinicsType? clinicType;
   String? clinicChairs;
   int? visitsCount;
   String? logoUrl;
@@ -37,26 +39,28 @@ class Visits {
     email = json['email'];
     whatsappNumber = json['whatsapp_number'];
     location = json['location'];
-    clinicType = json['clinic_type'];
+    clinicType = json['clinic_type'] != null ?ClinicsType.fromJson(json['clinic_type']):null;
     clinicChairs = json['clinic_chairs'];
     visitsCount = json['visits_count'];
     logoUrl = json['logo_url'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['doctor_name'] = this.doctorName;
-    data['mobile_number'] = this.mobileNumber;
-    data['telephone_number'] = this.telephoneNumber;
-    data['email'] = this.email;
-    data['whatsapp_number'] = this.whatsappNumber;
-    data['location'] = this.location;
-    data['clinic_type'] = this.clinicType;
-    data['clinic_chairs'] = this.clinicChairs;
-    data['visits_count'] = this.visitsCount;
-    data['logo_url'] = this.logoUrl;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['doctor_name'] = doctorName;
+    data['mobile_number'] = mobileNumber;
+    data['telephone_number'] = telephoneNumber;
+    data['email'] = email;
+    data['whatsapp_number'] = whatsappNumber;
+    data['location'] = location;
+    if(clinicType != null){
+      data['clinic_type'] = clinicType!.toJson();
+    }
+    data['clinic_chairs'] = clinicChairs;
+    data['visits_count'] = visitsCount;
+    data['logo_url'] = logoUrl;
     return data;
   }
 }

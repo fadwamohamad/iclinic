@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iclinic/custom_lib/custom_drop_down/custom_dropdown.dart';
@@ -26,45 +26,48 @@ import '../../utils/helpers.dart';
 
 class AddClinicUi extends StatefulWidget {
   Clinics? clinic;
-   AddClinicUi({Key? key,this.clinic}) : super(key: key);
+  AddClinicUi({Key? key, this.clinic}) : super(key: key);
 
   @override
   State<AddClinicUi> createState() => _AddClinicUiState();
 }
 
-class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
+class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
   Completer<GoogleMapController> _controller = Completer();
-  static List<Day> days = [
-    Day(id: 1, name: "السبت"),
-    Day(id: 2, name: "الأحد"),
-    Day(id: 3, name: "الإثنين"),
-    Day(id: 4, name: "الثلاثاء"),
-    Day(id: 5, name: "الأربعاء"),
-    Day(id: 6, name: "الخميس"),
-    Day(id: 7, name: "الجمعة"),
-  ];
-  final _items =
-      days.map((day) => MultiSelectItem<Day>(day,day.name!)).toList();
-  List<String>? days2;
+  static List<String> days = ["السبت","الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"];
+  late List<String>? workDays = widget.clinic?.workdays;
   var formKey = GlobalKey<FormState>();
-  late TextEditingController clinicNameController = TextEditingController(text: widget.clinic?.name);
-  late TextEditingController doctorNameController = TextEditingController(text: widget.clinic?.doctorName);
-  late TextEditingController mobileNumController = TextEditingController(text: widget.clinic?.mobileNumber);
-  late TextEditingController phoneNumController = TextEditingController(text: widget.clinic?.telephoneNumber);
-  late TextEditingController emailController = TextEditingController(text: widget.clinic?.email);
-  late TextEditingController whatsappController = TextEditingController(text: widget.clinic?.whatsappNumber);
-  TextEditingController clinicAddress = TextEditingController();
+  late TextEditingController clinicNameController =
+      TextEditingController(text: widget.clinic?.name);
+  late TextEditingController doctorNameController =
+      TextEditingController(text: widget.clinic?.doctorName);
+  late TextEditingController mobileNumController =
+      TextEditingController(text: widget.clinic?.mobileNumber);
+  late TextEditingController phoneNumController =
+      TextEditingController(text: widget.clinic?.telephoneNumber);
+  late TextEditingController emailController =
+      TextEditingController(text: widget.clinic?.email);
+  late TextEditingController whatsappController =
+      TextEditingController(text: widget.clinic?.whatsappNumber);
+  late TextEditingController clinicAddress =
+      TextEditingController(text: widget.clinic?.address);
   TextEditingController clinicSpecialty = TextEditingController();
   TextEditingController cityController = TextEditingController();
   TextEditingController numOfChairs = TextEditingController();
   TextEditingController governorateController = TextEditingController();
-  TextEditingController from = TextEditingController();
-  TextEditingController to = TextEditingController();
+  late TextEditingController from =
+      TextEditingController(text: widget.clinic?.timeStart);
+  late TextEditingController to =
+      TextEditingController(text: widget.clinic?.timeEnd);
   bool numOfChairsVisibility = false;
-  String clinicCard = "";
-  late String clinicLogo = widget.clinic?.logo??"";
+  late String clinicCard = widget.clinic?.businessCardUrl ?? "";
+  late String clinicLogo = widget.clinic?.logoUrl ?? "";
   late AddClinicController controller;
-
+  late int clinicTypeId = widget.clinic?.clinicTypeId as int ?? 0;
+  late int cityId = widget.clinic?.cityId ?? 0;
+  int countryId = 0;
+  double? longitude;
+  double? latitude;
   static const CameraPosition _kGoogle = CameraPosition(
     target: LatLng(31.243600, 34.232400),
     zoom: 14.4746,
@@ -72,12 +75,17 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
 
   // on below line we have created the list of markers
   final List<Marker> _markers = <Marker>[
-    const Marker(
-        markerId: MarkerId('1'),
-        position: LatLng(20.42796133580664, 75.885749655962),
-        infoWindow: InfoWindow(
+    Marker(
+        markerId: const MarkerId('1'),
+        position: const LatLng(20.42796133580664, 75.885749655962),
+        draggable: true,
+        infoWindow: const InfoWindow(
           title: 'My Position',
-        )),
+        ),
+        onDragEnd: ((newPosition) {
+          print(newPosition.latitude);
+          print(newPosition.longitude);
+        })),
   ];
   late GoogleMapController googleMapController;
   @override
@@ -92,15 +100,25 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
     // TODO: implement initState
     super.initState();
     controller = AddClinicController(this);
+    controller.getClinicType();
+    controller.getCountries();
     getUserCurrentLocation().then((value) async {
       print(value.latitude.toString() + " " + value.longitude.toString());
       _markers.add(Marker(
-        markerId: const MarkerId("2"),
-        position: LatLng(value.latitude, value.longitude),
-        infoWindow: const InfoWindow(
-          title: 'My Current Location',
-        ),
-      ));
+          markerId: const MarkerId("2"),
+          position: LatLng(value.latitude, value.longitude),
+          draggable: true,
+          infoWindow: const InfoWindow(
+            title: 'My Current Location',
+          ),
+          onDragEnd: ((newPosition) {
+            print(newPosition.latitude);
+            print(newPosition.longitude);
+            setState(() {
+              latitude = newPosition.latitude;
+              longitude = newPosition.longitude;
+            });
+          })));
       CameraPosition cameraPosition = CameraPosition(
         target: LatLng(value.latitude, value.longitude),
         zoom: 14,
@@ -114,6 +132,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(63.h),
         child: CustomAppBar(title: 'اضافة عيادة جديدة'),
@@ -131,24 +150,31 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
               height: 103.h,
               child: IconButton(
                   onPressed: () {
-                    showImagePicker(context: context,
+                    showImagePicker(
+                        context: context,
                         onResult: (xfile) {
                           setState(() {
                             clinicLogo = xfile?.path ?? "";
                           });
-                        }
-                    );
-
+                        });
                   },
                   icon: widget.clinic != null
-                      ?CustomNetworkImage(image: clinicLogo, height: 103.h, width: 103.w, fit: BoxFit.cover)
-                  :CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    //borderRadius: BorderRadius.circular(50.r),
-                      radius: 40.r,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50.r),
-                          child: CustomNetworkImage(image: clinicLogo, height: 103.h, width: 103.w, fit: BoxFit.cover)))),
+                      ? CustomNetworkImage(
+                          image: clinicLogo,
+                          height: 103.h,
+                          width: 103.w,
+                          fit: BoxFit.cover)
+                      : CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          //borderRadius: BorderRadius.circular(50.r),
+                          radius: 40.r,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.r),
+                              child: CustomNetworkImage(
+                                  image: clinicLogo,
+                                  height: 103.h,
+                                  width: 103.w,
+                                  fit: BoxFit.cover)))),
             ),
             SizedBox(
               height: 28.h,
@@ -304,7 +330,8 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
               shadowColor: MyColors.grey6Color,
               borderRadius: BorderRadius.circular(10.r),
               child: MultiSelectDialogField(
-                  items: _items,
+                  items: days.map((e) => MultiSelectItem(e, e)).toList(),
+                  initialValue: workDays,
                   title: const Text("أيام الدوام"),
                   backgroundColor: MyColors.whiteColor,
                   buttonIcon: Icon(
@@ -328,12 +355,16 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
                       return "مطلوب";
                     }
                   },
-                  onConfirm: (ddd) {
-                    for(int i = 0; i<ddd.length;i++){
-                      Day hhhh=ddd[i] as Day;
-                      days2?.add(hhhh.name??"");
+                 // initialValue: days,
+                  onConfirm: (arr) {
+                    for (int i = 0; i < arr.length; i++) {
+                      String hh = arr[i] as String;
+                      workDays?.add(hh);
+                      // setState((){
+                      //   workDays?.add(days[i]);
+                      // });
                     }
-
+                    print("objectzzz>> ${workDays?.length}");
                   }),
             ),
             SizedBox(
@@ -341,46 +372,52 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
             ),
             Row(
               children: [
-                Expanded(child: Column(
+                Expanded(
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText('من:',
                         color: MyColors.textColor,
                         size: 12,
-                        padding: EdgeInsetsDirectional.only(start: 17.w)
-                    ),
+                        padding: EdgeInsetsDirectional.only(start: 17.w)),
                     SizedBox(
                       height: 5.h,
                     ),
-                    CustomTextField(controller: from,
-                      onTap: (){
+                    CustomTextField(
+                      controller: from,
+                      onTap: () {
                         showTimePicker(
-                            context: context, initialTime: TimeOfDay.now())
+                                context: context, initialTime: TimeOfDay.now())
                             .then((value) {
-                          from.text = Helpers.formatTimeOfDay(value!, DateFormat.Hm());
+                          from.text =
+                              Helpers.formatTimeOfDay(value!, DateFormat.Hm());
                         });
                       },
                     ),
                   ],
                 )),
-                SizedBox(width: 10.w,),
-                Expanded(child: Column(
+                SizedBox(
+                  width: 10.w,
+                ),
+                Expanded(
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText('إلى:',
                         color: MyColors.textColor,
                         size: 12,
-                        padding: EdgeInsetsDirectional.only(start: 17.w)
-                    ),
+                        padding: EdgeInsetsDirectional.only(start: 17.w)),
                     SizedBox(
                       height: 5.h,
                     ),
-                    CustomTextField(controller: to,
-                      onTap: (){
+                    CustomTextField(
+                      controller: to,
+                      onTap: () {
                         showTimePicker(
-                            context: context, initialTime: TimeOfDay.now())
+                                context: context, initialTime: TimeOfDay.now())
                             .then((value) {
-                          to.text = Helpers.formatTimeOfDay(value!, DateFormat.Hm());
+                          to.text =
+                              Helpers.formatTimeOfDay(value!, DateFormat.Hm());
                         });
                       },
                     ),
@@ -403,14 +440,14 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
               shadowColor: MyColors.grey6Color,
               borderRadius: BorderRadius.circular(10.r),
               child: CustomDropdown(
-                  items: const ['أسنان', 'xzx'],
+                  items: controller.clinicTypes,
                   controller: clinicSpecialty,
                   inColor: MyColors.whiteColor,
                   outLineBorder: true,
                   hintText: 'تخصص العيادة',
                   borderRadius: BorderRadius.circular(10.r),
                   onChanged: (val) {
-                    if (val == 'أسنان') {
+                    if (val == 'اسنان') {
                       setState(() {
                         numOfChairsVisibility = true;
                       });
@@ -420,7 +457,9 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
                       });
                     }
                   },
-                  myVoidCallback: (nbn) {}),
+                  myVoidCallback: (result) {
+                    clinicTypeId = result.id;
+                  }),
             ),
             Visibility(
                 visible: numOfChairsVisibility,
@@ -458,9 +497,16 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
               shadowColor: MyColors.grey6Color,
               borderRadius: BorderRadius.circular(10.r),
               child: CustomDropdown(
-                items: ['الضفة', 'غزة'],
+                items: controller.countries,
                 controller: cityController,
-                myVoidCallback: (m) {},
+                myVoidCallback: (result) {
+                  setState(() {
+                    countryId = result.id;
+                    if (countryId != null) {
+                      controller.getCites(countryId);
+                    }
+                  });
+                },
                 inColor: MyColors.whiteColor,
                 outLineBorder: true,
                 hintText: 'الضفة/غزة',
@@ -482,9 +528,11 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
               shadowColor: MyColors.grey6Color,
               borderRadius: BorderRadius.circular(10.r),
               child: CustomDropdown(
-                items: [],
+                items: controller.cites,
                 controller: governorateController,
-                myVoidCallback: (m) {},
+                myVoidCallback: (result) {
+                  cityId = result.id;
+                },
                 inColor: MyColors.whiteColor,
                 outLineBorder: true,
                 hintText: 'المحافظة',
@@ -530,7 +578,9 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
                   ..add(Factory<EagerGestureRecognizer>(
                       () => EagerGestureRecognizer())),
                 onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
+                  if (!_controller.isCompleted) {
+                    _controller.complete(controller);
+                  }
                 },
               ),
             ),
@@ -540,17 +590,50 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
             CustomButton(
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  controller.addClinic({
-                    "name" : clinicNameController.text,
-                    "doctor_name": doctorNameController.text,
-                    "mobile_number": mobileNumController.text,
-                    "telephone_number": phoneNumController.text,
-                    "email": emailController.text.isEmpty,
-                    "whatsapp_number": whatsappController.text,
-                    "location": clinicAddress.text,
-                    "clinic_type": clinicSpecialty.text,
-                    "clinic_chairs": numOfChairs.text
-                  });
+                  if (widget.clinic?.id != null) {
+                    controller.updateClinic(
+                      {
+                        "name": clinicNameController.text,
+                        "doctor_name": doctorNameController.text,
+                        "mobile_number": mobileNumController.text,
+                        "telephone_number": phoneNumController.text,
+                        "email": emailController.text,
+                        "whatsapp_number": whatsappController.text,
+                        "address": clinicAddress.text,
+                        "clinic_type_id": 1,
+                        "clinic_chairs": numOfChairs.text,
+                        "time_start": from.text,
+                        "time_end": to.text,
+                        "workdays": workDays,
+                        "city_id": cityId,
+                        "longitude": longitude,
+                        "latitude": latitude
+                      },
+                      widget.clinic?.id ?? 0,
+                      cardImage: File(clinicCard),
+                      logoImage: File(clinicLogo),
+                    );
+                  } else {
+                    controller.addClinic({
+                      "name": clinicNameController.text,
+                      "doctor_name": doctorNameController.text,
+                      "mobile_number": mobileNumController.text,
+                      "telephone_number": phoneNumController.text,
+                      "email": emailController.text,
+                      "whatsapp_number": whatsappController.text,
+                      "address": clinicAddress.text,
+                      "clinic_type_id": 1,
+                      "clinic_chairs": numOfChairs.text,
+                      "time_start": from.text,
+                      "time_end": to.text,
+                      "workdays": '$workDays',
+                      "city_id": cityId,
+                      "longitude": longitude,
+                      "latitude": latitude
+                    },
+                        cardImage: File(clinicCard),
+                        logoImage: File(clinicLogo));
+                  }
                 }
               },
               text: 'اضافة عيادة',
@@ -576,18 +659,17 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
   @override
   void onSuccess(dynamic) {
     // TODO: implement onSuccess
+    Navigator.pop(context);
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
               shape: RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(10.0.r))),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0.r))),
               content: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.r)),
-                padding: EdgeInsetsDirectional.only(
-                    start: 39.w, end: 39.w),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
+                padding: EdgeInsetsDirectional.only(start: 39.w, end: 39.w),
                 height: 292.h,
                 child: Column(
                   children: [
@@ -611,7 +693,9 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface{
                       height: 45.h,
                     ),
                     CustomButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       color: MyColors.greenColor,
                       text: 'موافق',
                       height: 40.h,

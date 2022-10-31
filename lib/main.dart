@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:iclinic/screens/login_ui/login_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iclinic/screens/main_ui/main_ui.dart';
@@ -76,7 +77,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
-            useInheritedMediaQuery: true,
+            //useInheritedMediaQuery: true,
             locale: DevicePreview.locale(context),
             theme: ThemeData(
               scaffoldBackgroundColor: MyColors.backgroundColor,

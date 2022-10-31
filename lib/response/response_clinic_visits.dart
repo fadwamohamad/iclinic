@@ -12,15 +12,15 @@ class DataClinicVisits {
     if (json['visits'] != null) {
       visits = <ClinicVisits>[];
       json['visits'].forEach((v) {
-        visits!.add(new ClinicVisits.fromJson(v));
+        visits!.add(ClinicVisits.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.visits != null) {
-      data['visits'] = this.visits!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    if (visits != null) {
+      data['visits'] = visits!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -37,6 +37,7 @@ class ClinicVisits {
   int? clinicId;
   String? createdAt;
   String? updatedAt;
+  VisitDetail? visitDetail;
 
   ClinicVisits(
       {this.id,
@@ -47,7 +48,8 @@ class ClinicVisits {
         this.userId,
         this.clinicId,
         this.createdAt,
-        this.updatedAt});
+        this.updatedAt,
+        this.visitDetail});
 
   ClinicVisits.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -59,19 +61,78 @@ class ClinicVisits {
     clinicId = json['clinic_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    visitDetail = json['visit_detail'] != null
+        ? VisitDetail.fromJson(json['visit_detail'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['visit_number'] = this.visitNumber;
-    data['visit_date'] = this.visitDate;
-    data['begin_visit'] = this.beginVisit;
-    data['end_visit'] = this.endVisit;
-    data['user_id'] = this.userId;
-    data['clinic_id'] = this.clinicId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['visit_number'] = visitNumber;
+    data['visit_date'] = visitDate;
+    data['begin_visit'] = beginVisit;
+    data['end_visit'] = endVisit;
+    data['user_id'] = userId;
+    data['clinic_id'] = clinicId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    if (visitDetail != null) {
+      data['visit_detail'] = visitDetail!.toJson();
+    }
+    return data;
+  }
+}
+
+class VisitDetail {
+  int? id;
+  String? visitReport;
+  String? customerSatisfaction;
+  String? visitType;
+  int? checkAnotherApp;
+  String? anotherApp;
+  int? visitId;
+  String? customerRecommendations;
+  String? createdAt;
+  String? updatedAt;
+
+  VisitDetail(
+      {this.id,
+        this.visitReport,
+        this.customerSatisfaction,
+        this.visitType,
+        this.checkAnotherApp,
+        this.anotherApp,
+        this.visitId,
+        this.customerRecommendations,
+        this.createdAt,
+        this.updatedAt});
+
+  VisitDetail.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    visitReport = json['visit_report'];
+    customerSatisfaction = json['customer_satisfaction'];
+    visitType = json['visit_type'];
+    checkAnotherApp = json['check_another_app'];
+    anotherApp = json['another_app'];
+    visitId = json['visit_id'];
+    customerRecommendations = json['customer_recommendations'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['visit_report'] = visitReport;
+    data['customer_satisfaction'] = customerSatisfaction;
+    data['visit_type'] = visitType;
+    data['check_another_app'] = checkAnotherApp;
+    data['another_app'] = anotherApp;
+    data['visit_id'] = visitId;
+    data['customer_recommendations'] = this.customerRecommendations;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

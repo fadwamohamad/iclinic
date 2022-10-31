@@ -276,13 +276,13 @@ class Webservice {
 
       if (logoImage != null&&logoImage.path.isNotEmpty) {
         formData.files.add(MapEntry(
-            'logo',
+            'logo_url',
             MultipartFile.fromFileSync(logoImage.path,
                 filename: logoImage.path.split(Platform.pathSeparator).last)));
       }
       if (cardImage != null&&cardImage.path.isNotEmpty) {
         formData.files.add(MapEntry(
-            'card',
+            'business_card_url',
             MultipartFile.fromFileSync(cardImage.path,
                 filename: cardImage.path.split(Platform.pathSeparator).last)));
       }
@@ -469,7 +469,7 @@ class Webservice {
       }
       if (cardImage != null&&cardImage.path.isNotEmpty) {
         formData.files.add(MapEntry(
-            'card',
+            'business_card',
             MultipartFile.fromFileSync(cardImage.path,
                 filename: cardImage.path.split(Platform.pathSeparator).last)));
       }
