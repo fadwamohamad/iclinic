@@ -13,7 +13,8 @@ import 'package:iclinic/widgets/navigation.dart';
 import 'package:iclinic/widgets/search.dart';
 
 class ClinicsUi extends StatefulWidget {
-  const ClinicsUi({Key? key}) : super(key: key);
+  Map<String, dynamic> map = {};
+   ClinicsUi({Key? key,required this.map}) : super(key: key);
 
   @override
   State<ClinicsUi> createState() => _ClinicsUiState();
@@ -22,7 +23,7 @@ class ClinicsUi extends StatefulWidget {
 class _ClinicsUiState extends State<ClinicsUi> with AutomaticKeepAliveClientMixin {
   TextEditingController searchController = TextEditingController();
   ClinicsController controller = ClinicsController();
-  Map<String, dynamic> map = {};
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,12 @@ class _ClinicsUiState extends State<ClinicsUi> with AutomaticKeepAliveClientMixi
               children: [
                 Search(
                     context: context,
-                    searchPress: (ddd) {},
+                    searchPress: (value) {
+                      widget.map["search"] = value;
+                      controller.getClinics(1, map: widget.map);
+                      controller.rest.refresh();
+                      controller.clinics.refresh();
+                    },
                     searchEditingController: searchController),
                 Expanded(
                   child: ListGeneralUi(
@@ -47,7 +53,7 @@ class _ClinicsUiState extends State<ClinicsUi> with AutomaticKeepAliveClientMixi
                     length: controller.clinics.length,
                     error: controller.error.value,
                     onGetData: (page) async {
-                      return await controller.getClinics(page, map: map) ?? false;
+                      return await controller.getClinics(page, map: widget.map) ?? false;
                     },
                     pagination: false,
                     pullToRefresh: true,
@@ -96,6 +102,7 @@ class _ClinicsUiState extends State<ClinicsUi> with AutomaticKeepAliveClientMixi
                                         CustomButton(
                                           onPressed: () {
                                             controller.deleteClinic(controller.clinics[index].id??0);
+                                            Navigator.pop(context);
                                           },
                                           color: MyColors.greenColor,
                                           text: 'تأكيد',

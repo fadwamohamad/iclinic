@@ -19,24 +19,25 @@ class AddClinicController extends BaseController with Helpers {
       {File? logoImage,
         File? cardImage,
       }) async {
-    try{
+
+
+    // try{
 
       showLoading();
-      BaseResponse<Clinics>? response =
-      await Apis().addClinic(map, logoImage: logoImage,cardImage: cardImage);
+      BaseResponse<ResponseClinic2>? response = await Apis().addClinic(map, logoImage: logoImage,cardImage: cardImage);
       print(response?.result);
       dismissLoading();
       if (response!.status) {
         showMessage(response.msg??"تم إضافة العيادة بنجاح",error: false);
-        view.onSuccess(response.result);
+        view.onSuccess(response.result?.clinic);
       } else {
         showMessage(response.msg??"");
       }
-    }catch(error){
+    /*}catch(error){
       error.printError();
       dismissLoading();
       showMessage(error.toString());
-    }
+    }*/
   }
 
   updateClinic(
@@ -45,10 +46,13 @@ class AddClinicController extends BaseController with Helpers {
       {File? logoImage,
         File? cardImage,
       }) async {
-    try{
+   // try{
 
+    print("cardImage?.path");
+    print(cardImage?.path);
+    print(logoImage?.path);
       showLoading();
-      BaseResponse<Clinics>? response =
+      BaseResponse<ResponseClinic2>? response =
       await Apis().updateClinic(map,clinicId, logoImage: logoImage,cardImage: cardImage);
       dismissLoading();
       if (response!.status) {
@@ -57,10 +61,10 @@ class AddClinicController extends BaseController with Helpers {
       } else {
         showMessage(response.msg??"");
       }
-    }catch(error){
-      error.printError();
-      dismissLoading();
-      showMessage(error.toString());
-    }
+    // }catch(error){
+    //   error.printError();
+    //   dismissLoading();
+    //   showMessage(error.toString());
+    // }
   }
 }

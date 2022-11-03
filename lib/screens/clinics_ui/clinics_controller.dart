@@ -3,7 +3,6 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:iclinic/services/BaseResponse.dart';
 import 'package:iclinic/services/BaseResponseList.dart';
 import 'package:iclinic/utils/helpers.dart';
-
 import '../../response/response_clinic.dart';
 import '../../services/apis.dart';
 import '../../services/webservice.dart';

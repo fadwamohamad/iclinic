@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iclinic/screens/add_clinic_ui/add_clinic_ui.dart';
 import 'package:iclinic/screens/clinics_ui/clinics_ui.dart';
+import 'package:iclinic/screens/login_ui/login_ui.dart';
 import 'package:iclinic/screens/visits_ui/visits_ui.dart';
 import 'package:iclinic/utils/colors.dart';
 import 'package:iclinic/widgets/custom_text.dart';
 import 'package:iclinic/widgets/navigation.dart';
+
+import '../../custom_lib/awesome_dialogs/awesome_dialog.dart';
+import '../../utils/user_preference.dart';
 
 class MainUi extends StatefulWidget {
   const MainUi({Key? key}) : super(key: key);
@@ -33,15 +36,15 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
     return DefaultTabController(
       length: 2,
       child: WillPopScope(
-          onWillPop: () async {
-            if (tabController.index != 0) {
-              setState(() {
-                tabController.index = 0;
-              });
-              return false;
-            } else
-              return true;
-          },
+        onWillPop: () async {
+          if (tabController.index != 0) {
+            setState(() {
+              tabController.index = 0;
+            });
+            return false;
+          } else
+            return true;
+        },
         child: Scaffold(
           appBar: AppBar(
             title: CustomText('الرئيسية',
@@ -73,17 +76,35 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
               ],
             ),
           ),
-          body: TabBarView(
-              controller: tabController,
-              children: const [ClinicsUi(), VisitsUi()]),
-          // floatingActionButton: FloatingActionButton(
-          //   elevation: 8,
-          //   onPressed: () {
-          //     navigateTo(context, const AddClinicUi());
-          //   },
-          //   backgroundColor: MyColors.greenColor,
-          //   child: const Icon(Icons.add),
-          // ),
+          body: TabBarView(controller: tabController, children: [
+            ClinicsUi(
+              map: {},
+            ),
+            VisitsUi(
+              map: {},
+            )
+          ]),
+          floatingActionButton: FloatingActionButton(
+            elevation: 8,
+            onPressed: () {
+              AwesomeDialog(
+                context: context,
+                dialogType: DialogType.INFO,
+                animType: AnimType.BOTTOMSLIDE,
+                desc: 'هل تريد بالتأكيد تسجيل خروج من التطبيق؟',
+                btnOkText: "تأكيد",
+                btnCancelText: "إلغاء",
+                btnCancelOnPress: () {},
+                btnOkOnPress: () {
+                  UserPreferences().logOut();
+                  navigateTo(context, const LoginUi());
+                },
+              ).show();
+            },
+            backgroundColor: MyColors.mainColor,
+            child: const Icon(Icons.logout),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         ),
       ),
     );

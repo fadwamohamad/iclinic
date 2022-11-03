@@ -11,7 +11,8 @@ import '../../utils/list_general_ui.dart';
 import '../../widgets/search.dart';
 
 class VisitsUi extends StatefulWidget {
-  const VisitsUi({Key? key}) : super(key: key);
+  Map<String, dynamic> map = {};
+   VisitsUi({Key? key,required this.map}) : super(key: key);
 
   @override
   State<VisitsUi> createState() => _VisitsUiState();
@@ -21,7 +22,7 @@ class _VisitsUiState extends State<VisitsUi>
     with AutomaticKeepAliveClientMixin {
   TextEditingController searchController = TextEditingController();
   VisitsController controller = VisitsController();
-  Map<String, dynamic> map = {};
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +32,12 @@ class _VisitsUiState extends State<VisitsUi>
           children: [
             Search(
                 context: context,
-                searchPress: (ddd) {},
+                searchPress: (value) {
+                  widget.map["search"] = value;
+                  controller.getVisits(1, map: widget.map);
+                  controller.rest.refresh();
+                  controller.visits.refresh();
+                },
                 searchEditingController: searchController),
             Expanded(
               child: ListGeneralUi(
@@ -42,7 +48,7 @@ class _VisitsUiState extends State<VisitsUi>
                 length: controller.visits.length,
                 error: controller.error.value,
                 onGetData: (page) async {
-                  return await controller.getVisits(page, map: map) ?? false;
+                  return await controller.getVisits(page, map: widget.map) ?? false;
                 },
                 pagination: false,
                 pullToRefresh: true,

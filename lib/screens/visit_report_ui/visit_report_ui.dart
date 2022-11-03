@@ -7,7 +7,7 @@ import 'package:iclinic/response/response_clinic_visits.dart';
 import 'package:iclinic/screens/visit_report_ui/visit_report_controller.dart';
 import 'package:iclinic/widgets/custom_button.dart';
 import 'package:iclinic/widgets/custom_text_field.dart';
-
+import '../../models/customer_satisfication.dart';
 import '../../utils/colors.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -28,17 +28,37 @@ class VisitReportUi extends StatefulWidget {
 
 class _VisitReportUiState extends State<VisitReportUi>
     implements SuccessInterface {
- late bool checkAnotherApp = widget.item?.visitDetail?.checkAnotherApp == 1?true:false;
+  static List<Satisfaction> satiList = [
+    Satisfaction(id: "excellent", name: "ممتاز"),
+    Satisfaction(id: "very_good", name: "جيد جداً"),
+    Satisfaction(id: "good", name: "جيد"),
+    Satisfaction(id: "pass", name: "مقبول"),
+  ];
+
+  static List<VisitType> visitList = [
+    VisitType(id: "marketing", name: "تسويق"),
+    VisitType(id: "program_description", name: "وصف البرنامج"),
+    VisitType(id: "technical_support", name: "دعم فني"),
+    VisitType(id: "financial_collection", name: "تحصيل مالي"),
+  ];
+
+  late bool checkAnotherApp =
+      widget.item?.visitDetail?.checkAnotherApp == 1 ? true : false;
   late bool another_app = checkAnotherApp;
   late TextEditingController notesController =
       TextEditingController(text: widget.item?.visitDetail?.visitReport);
-  late TextEditingController rangeOfAgree = TextEditingController(text:widget.item?.visitDetail?.customerSatisfaction??"");
-  late TextEditingController visitType = TextEditingController(text: widget.item?.visitDetail?.visitType);
+  late TextEditingController rangeOfAgree = TextEditingController(
+      text: getSatisfaction(
+          widget.item?.visitDetail?.customerSatisfaction ?? ""));
+  late TextEditingController visitType = TextEditingController(
+      text: getvisitType(widget.item?.visitDetail?.visitType ?? ""));
   late TextEditingController customerRecommendations = TextEditingController(
       text: widget.item?.visitDetail?.customerRecommendations);
-  late TextEditingController anotherAppController = TextEditingController(
-      text: widget.item?.visitDetail?.anotherApp);
+  late TextEditingController anotherAppController =
+      TextEditingController(text: widget.item?.visitDetail?.anotherApp);
   late VisitReportController controller = VisitReportController(this);
+  late String satisId = widget.item?.visitDetail?.customerSatisfaction ?? "";
+  late String visitTypeId = widget.item?.visitDetail?.visitType ?? "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -154,9 +174,13 @@ class _VisitReportUiState extends State<VisitReportUi>
             height: 11.h,
           ),
           CustomDropdown(
-            items: const ["good","excellent","very_good","pass"],
+            items: satiList,
             controller: rangeOfAgree,
-            myVoidCallback: (nnn) {},
+            myVoidCallback: (result) {
+              setState(() {
+                satisId = result.id;
+              });
+            },
             outLineBorder: true,
             hintText: '',
             inColor: MyColors.whiteColor,
@@ -176,9 +200,13 @@ class _VisitReportUiState extends State<VisitReportUi>
             height: 11.h,
           ),
           CustomDropdown(
-            items: const ["program_description","marketing","technical_support","financial_collection"],
+            items: visitList,
             controller: visitType,
-            myVoidCallback: (nnn) {},
+            myVoidCallback: (result) {
+              setState(() {
+                visitTypeId = result.id;
+              });
+            },
             outLineBorder: true,
             hintText: '',
             inColor: MyColors.whiteColor,
@@ -210,8 +238,7 @@ class _VisitReportUiState extends State<VisitReportUi>
               Theme(
                   data: ThemeData(unselectedWidgetColor: MyColors.mainColor),
                   child: Checkbox(
-                      materialTapTargetSize:
-                      MaterialTapTargetSize.shrinkWrap,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       value: another_app,
                       activeColor: MyColors.mainColor,
                       onChanged: (check) {
@@ -223,9 +250,11 @@ class _VisitReportUiState extends State<VisitReportUi>
                   size: 14.sp, color: MyColors.blackColor),
             ],
           ),
-          SizedBox(height: 10.h,),
+          SizedBox(
+            height: 10.h,
+          ),
           Visibility(
-            visible: another_app,
+              visible: another_app,
               child: CustomTextField(controller: anotherAppController)),
           SizedBox(
             height: 50.h,
@@ -233,22 +262,23 @@ class _VisitReportUiState extends State<VisitReportUi>
           CustomButton(
             onPressed: () {
               print({
-                "visit_report":notesController.text,
-                "customer_satisfaction":rangeOfAgree.text,
+                "visit_report": notesController.text,
+                "customer_satisfaction": rangeOfAgree.text,
                 "visit_type": visitType.text,
                 "customer_recommendations": customerRecommendations.text,
-                "check_another_app":another_app,
+                "check_another_app": another_app,
                 "another_app": anotherAppController.text
               });
 
               controller.updateVisitReport({
-                "visit_report":notesController.text,
-                "customer_satisfaction":rangeOfAgree.text,
-                "visit_type": visitType.text,
+                "visit_report": notesController.text,
+                "customer_satisfaction": satisId,
+                "visit_type": visitTypeId,
                 "customer_recommendations": customerRecommendations.text,
-                "check_another_app":another_app,
+                "check_another_app": another_app,
                 "another_app": anotherAppController.text
               }, widget.item?.id ?? 0);
+
             },
             text: 'حفظ التعديلات',
             color: MyColors.greenColor,
@@ -262,5 +292,17 @@ class _VisitReportUiState extends State<VisitReportUi>
   void onSuccess(dynamic) {
     // TODO: implement onSuccess
     Navigator.pop(context);
+  }
+
+  static getvisitType(String id) {
+    for (int i = 0; i < visitList.length; i++) {
+      if (id == visitList[i].id) return visitList[i].name;
+    }
+  }
+
+  static getSatisfaction(String id) {
+    for (int i = 0; i < satiList.length; i++) {
+      if (id == satiList[i].id) return satiList[i].name;
+    }
   }
 }

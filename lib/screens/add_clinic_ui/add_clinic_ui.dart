@@ -9,7 +9,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iclinic/custom_lib/custom_drop_down/custom_dropdown.dart';
 import 'package:iclinic/dialogs/image_picker.dart';
 import 'package:iclinic/interfaces/success_interface.dart';
-import 'package:iclinic/models/days.dart';
 import 'package:iclinic/response/response_clinic.dart';
 import 'package:iclinic/screens/add_clinic_ui/add_clinic_controller.dart';
 import 'package:iclinic/utils/colors.dart';
@@ -21,7 +20,6 @@ import 'package:iclinic/widgets/custom_text_field.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
-
 import '../../utils/helpers.dart';
 
 class AddClinicUi extends StatefulWidget {
@@ -33,9 +31,17 @@ class AddClinicUi extends StatefulWidget {
 }
 
 class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
-  Completer<GoogleMapController> _controller = Completer();
-  static List<String> days = ["السبت","الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"];
-  late List<String>? workDays = widget.clinic?.workdays;
+  final Completer<GoogleMapController> _controller = Completer();
+  static List<String> days = [
+    "السبت",
+    "الأحد",
+    "الإثنين",
+    "الثلاثاء",
+    "الأربعاء",
+    "الخميس",
+    "الجمعة"
+  ];
+  late List<String> workDays = widget.clinic?.workdays ?? [];
   var formKey = GlobalKey<FormState>();
   late TextEditingController clinicNameController =
       TextEditingController(text: widget.clinic?.name);
@@ -51,10 +57,14 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
       TextEditingController(text: widget.clinic?.whatsappNumber);
   late TextEditingController clinicAddress =
       TextEditingController(text: widget.clinic?.address);
-  TextEditingController clinicSpecialty = TextEditingController();
-  TextEditingController cityController = TextEditingController();
-  TextEditingController numOfChairs = TextEditingController();
-  TextEditingController governorateController = TextEditingController();
+  late TextEditingController clinicSpecialty =
+      TextEditingController(text: widget.clinic?.clinicType?.name);
+  late TextEditingController cityController =
+      TextEditingController(text: widget.clinic?.city?.area?.name);
+  late TextEditingController numOfChairs =
+      TextEditingController(text: widget.clinic?.clinicChairs);
+  late TextEditingController governorateController =
+      TextEditingController(text: widget.clinic?.city?.name);
   late TextEditingController from =
       TextEditingController(text: widget.clinic?.timeStart);
   late TextEditingController to =
@@ -63,11 +73,11 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
   late String clinicCard = widget.clinic?.businessCardUrl ?? "";
   late String clinicLogo = widget.clinic?.logoUrl ?? "";
   late AddClinicController controller;
-  late int clinicTypeId = widget.clinic?.clinicTypeId as int ?? 0;
-  late int cityId = widget.clinic?.cityId ?? 0;
-  int countryId = 0;
-  double? longitude;
-  double? latitude;
+  late int clinicTypeId = widget.clinic?.clinicType?.id?? 0;
+  late int cityId = widget.clinic?.city?.id ?? 0;
+  late int countryId = widget.clinic?.city?.area?.id ?? 0;
+  late double longitude = widget.clinic?.longitude??0.0;
+  late double latitude = widget.clinic?.latitude??0.0;
   static const CameraPosition _kGoogle = CameraPosition(
     target: LatLng(31.243600, 34.232400),
     zoom: 14.4746,
@@ -102,6 +112,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
     controller = AddClinicController(this);
     controller.getClinicType();
     controller.getCountries();
+
     getUserCurrentLocation().then((value) async {
       print(value.latitude.toString() + " " + value.longitude.toString());
       _markers.add(Marker(
@@ -112,8 +123,6 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
             title: 'My Current Location',
           ),
           onDragEnd: ((newPosition) {
-            print(newPosition.latitude);
-            print(newPosition.longitude);
             setState(() {
               latitude = newPosition.latitude;
               longitude = newPosition.longitude;
@@ -127,6 +136,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
       controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
       setState(() {});
     });
+
   }
 
   @override
@@ -355,16 +365,17 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                       return "مطلوب";
                     }
                   },
-                 // initialValue: days,
+                  // initialValue: days,
                   onConfirm: (arr) {
                     for (int i = 0; i < arr.length; i++) {
                       String hh = arr[i] as String;
-                      workDays?.add(hh);
+                      workDays.add(hh);
+                      //print('workdays $workDays');
                       // setState((){
                       //   workDays?.add(days[i]);
                       // });
                     }
-                    print("objectzzz>> ${workDays?.length}");
+                    print("objectzzz>> ${workDays.length}");
                   }),
             ),
             SizedBox(
@@ -600,18 +611,24 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                         "email": emailController.text,
                         "whatsapp_number": whatsappController.text,
                         "address": clinicAddress.text,
-                        "clinic_type_id": 1,
+                        "clinic_type_id": clinicTypeId,
                         "clinic_chairs": numOfChairs.text,
                         "time_start": from.text,
                         "time_end": to.text,
-                        "workdays": workDays,
+                        "workdays[]": workDays,
                         "city_id": cityId,
                         "longitude": longitude,
                         "latitude": latitude
                       },
                       widget.clinic?.id ?? 0,
-                      cardImage: File(clinicCard),
-                      logoImage: File(clinicLogo),
+                        cardImage:!(clinicCard.startsWith("http://") ||
+                            clinicCard.startsWith("https://"))
+                            ? File(clinicCard)
+                            : null ,
+                        logoImage: !(clinicLogo.startsWith("http://") ||
+                            clinicLogo.startsWith("https://"))
+                            ? File(clinicLogo)
+                            : null
                     );
                   } else {
                     controller.addClinic({
@@ -622,18 +639,20 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                       "email": emailController.text,
                       "whatsapp_number": whatsappController.text,
                       "address": clinicAddress.text,
-                      "clinic_type_id": 1,
+                      "clinic_type_id": clinicTypeId,
                       "clinic_chairs": numOfChairs.text,
                       "time_start": from.text,
                       "time_end": to.text,
-                      "workdays": '$workDays',
+                      "workdays[]": workDays,
                       "city_id": cityId,
                       "longitude": longitude,
                       "latitude": latitude
                     },
                         cardImage: File(clinicCard),
-                        logoImage: File(clinicLogo));
+                        logoImage: File(clinicLogo)
+                             );
                   }
+                  print("sssss$clinicLogo");
                 }
               },
               text: 'اضافة عيادة',
@@ -651,7 +670,6 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
         .then((value) {})
         .onError((error, stackTrace) async {
       await Geolocator.requestPermission();
-      print("ERROR" + error.toString());
     });
     return await Geolocator.getCurrentPosition();
   }

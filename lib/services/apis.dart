@@ -51,16 +51,22 @@ class Apis {
     return response;
   }
 
-  Future<BaseResponse<Clinics>?> addClinic(Map<String, dynamic> map,
+  Future<BaseResponse<ResponseClinic2>?> addClinic(Map<String, dynamic> map,
       {File? logoImage,File? cardImage }) async {
-    BaseResponse<Clinics>? response = await Webservice()
+    BaseResponse<ResponseClinic2>? response = await Webservice()
         .postFile("clinics", body: map,logoImage: logoImage,cardImage: cardImage);
     return response!;
   }
-  Future<BaseResponse<Clinics>?> updateClinic(Map<String, dynamic> map,int clinicId,
+  // Future<BaseResponse<Clinics>?> updateClinic(Map<String, dynamic> map,int clinicId,
+  //     {File? logoImage,File? cardImage }) async {
+  //   BaseResponse<Clinics>? response = await Webservice()
+  //       .putFile("clinics/$clinicId", body: map,logoImage: logoImage,cardImage: cardImage);
+  //   return response!;
+  // }
+  Future<BaseResponse<ResponseClinic2>?> updateClinic(Map<String, dynamic> map,int clinicId,
       {File? logoImage,File? cardImage }) async {
-    BaseResponse<Clinics>? response = await Webservice()
-        .putFile("clinics/$clinicId", body: map,logoImage: logoImage,cardImage: cardImage);
+    BaseResponse<ResponseClinic2>? response = await Webservice()
+        .postFile("clinics/$clinicId", body: map,logoImage: logoImage,cardImage: cardImage);
     return response!;
   }
 
