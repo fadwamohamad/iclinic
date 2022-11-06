@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:iclinic/response/response_add_clinic.dart';
 import 'package:iclinic/screens/add_clinic_ui/add_clinic_ui.dart';
 import 'package:iclinic/screens/clinics_ui/clinics_controller.dart';
 import 'package:iclinic/utils/colors.dart';
@@ -41,7 +41,7 @@ class _ClinicsUiState extends State<ClinicsUi> with AutomaticKeepAliveClientMixi
                       widget.map["search"] = value;
                       controller.getClinics(1, map: widget.map);
                       controller.rest.refresh();
-                      controller.clinics.refresh();
+                      //controller.clinics.refresh();
                     },
                     searchEditingController: searchController),
                 Expanded(
@@ -59,12 +59,19 @@ class _ClinicsUiState extends State<ClinicsUi> with AutomaticKeepAliveClientMixi
                     pullToRefresh: true,
                     itemBuilder: (context, index) {
                       return clinicsItem(
+                        controller.clinics[index],
                         imageUrl: controller.clinics[index].logoUrl,
                           doctorName: controller.clinics[index].doctorName,
                           clinicName: controller.clinics[index].name,
                           onEdit: () {
-                        navigateTo(context, AddClinicUi(clinic: controller.clinics[index],));
-                      }, onDelete: () {
+                        navigateTo(context, AddClinicUi(clinic: controller.clinics[index],title: "تعديل بيانات العيادة",
+                          onUpdate: (item){
+                          setState((){
+                            controller.clinics[index] = item as Clinic;
+                          });
+                          },
+                        ));
+                      }, onDelete: (item) {
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -102,6 +109,7 @@ class _ClinicsUiState extends State<ClinicsUi> with AutomaticKeepAliveClientMixi
                                         CustomButton(
                                           onPressed: () {
                                             controller.deleteClinic(controller.clinics[index].id??0);
+                                            controller.clinics.removeAt(index);
                                             Navigator.pop(context);
                                           },
                                           color: MyColors.greenColor,
@@ -154,7 +162,13 @@ class _ClinicsUiState extends State<ClinicsUi> with AutomaticKeepAliveClientMixi
                 ),
                 child: IconButton(
                     onPressed: () async {
-                      navigateTo(context, AddClinicUi());
+                      navigateTo(context, AddClinicUi(
+                        onUpdate: (item){
+                          setState(() {
+                            controller.clinics.add(item as Clinic);
+                          });
+                        },
+                      ));
                     },
                     icon: const Icon(
                       Icons.add,

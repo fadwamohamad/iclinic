@@ -42,8 +42,8 @@ class Apis {
     return response;
   }
 
-  Future<BaseResponseList<Clinics>?> getClinics(Map<String, dynamic> map) async {
-    BaseResponseList<Clinics>? response = await Webservice().getList("clinics",queryParameters: map);
+  Future<BaseResponseList<Clinic>?> getClinics(Map<String, dynamic> map) async {
+    BaseResponseList<Clinic>? response = await Webservice().getList("clinics",queryParameters: map);
     return response;
   }
   Future<BaseResponseList<Visits>?> getVisits(Map<String, dynamic> map) async {

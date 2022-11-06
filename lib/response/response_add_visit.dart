@@ -1,6 +1,7 @@
 
 class ResponseVisit {
   Visit? visit;
+  //instead of Visit use ClinicVisit but make visit number int
 
   ResponseVisit({this.visit});
 

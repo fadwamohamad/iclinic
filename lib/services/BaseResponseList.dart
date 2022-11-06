@@ -3,6 +3,8 @@ import 'package:iclinic/response/response_clinic_visits.dart';
 import 'package:iclinic/response/response_visit.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../response/response_add_clinic.dart';
+
 @JsonSerializable()
 class BaseResponseList<T> {
   @JsonKey(name: 'status')
@@ -34,8 +36,8 @@ class _Converter<T> implements JsonConverter<T, dynamic> {
 
   @override
   T fromJson(dynamic jsonx) {
-    if(T == Clinics){
-      return Clinics.fromJson(jsonx) as T;
+    if(T == Clinic){
+      return Clinic.fromJson(jsonx) as T;
     }
     if(T == Visits){
       return Visits.fromJson(jsonx) as T;

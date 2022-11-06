@@ -55,8 +55,8 @@ class _Converter<T> implements JsonConverter<T, dynamic> {
       return ResponseVisit.fromJson(jsonx) as T;
     }else if(T == DataClinicVisits){
       return DataClinicVisits.fromJson(jsonx) as T;
-    }else if(T == Clinics){
-      return Clinics.fromJson(jsonx) as T;
+    }else if(T == Clinic){
+      return Clinic.fromJson(jsonx) as T;
     }else if(T == ResponseClinicsType){
       return ResponseClinicsType.fromJson(jsonx) as T;
     }else if(T == ResponseArea){

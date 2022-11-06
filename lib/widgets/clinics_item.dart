@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iclinic/widgets/cached_network_image.dart';
+import '../response/response_add_clinic.dart';
 import '../utils/colors.dart';
 import 'custom_text.dart';
 
-Widget clinicsItem({
+Widget clinicsItem(
+    Clinic? item,{
   String? imageUrl,
   String? clinicName,
   String? doctorName,
-  Function()? onDelete,
+  Function(Clinic)? onDelete,
   Function()? onEdit}) => Container(
       padding: EdgeInsetsDirectional.only(
           start: 17.w, end: 17.w, top: 19.h, bottom: 19.h),
@@ -74,7 +76,7 @@ Widget clinicsItem({
                   color: MyColors.grey6Color,
                 ),
                 child: IconButton(
-                    onPressed: onDelete,
+                    onPressed: onDelete!=null?() => onDelete(item!):null,
                     icon: SvgPicture.asset('assets/icons/delete.svg')),
               )
             ],

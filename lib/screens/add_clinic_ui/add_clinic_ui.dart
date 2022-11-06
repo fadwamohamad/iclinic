@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iclinic/custom_lib/custom_drop_down/custom_dropdown.dart';
 import 'package:iclinic/dialogs/image_picker.dart';
 import 'package:iclinic/interfaces/success_interface.dart';
+import 'package:iclinic/response/response_add_clinic.dart';
 import 'package:iclinic/response/response_clinic.dart';
 import 'package:iclinic/screens/add_clinic_ui/add_clinic_controller.dart';
 import 'package:iclinic/utils/colors.dart';
@@ -23,8 +24,11 @@ import 'package:multi_select_flutter/util/multi_select_item.dart';
 import '../../utils/helpers.dart';
 
 class AddClinicUi extends StatefulWidget {
-  Clinics? clinic;
-  AddClinicUi({Key? key, this.clinic}) : super(key: key);
+  Clinic? clinic;
+  String? title;
+  Function(Clinic?)? onUpdate;
+
+  AddClinicUi({Key? key, this.clinic,this.title,this.onUpdate}) : super(key: key);
 
   @override
   State<AddClinicUi> createState() => _AddClinicUiState();
@@ -145,7 +149,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
       resizeToAvoidBottomInset: true,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(63.h),
-        child: CustomAppBar(title: 'اضافة عيادة جديدة'),
+        child: CustomAppBar(title: widget.title??'اضافة عيادة جديدة'),
       ),
       body: Form(
         key: formKey,
@@ -655,7 +659,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                   print("sssss$clinicLogo");
                 }
               },
-              text: 'اضافة عيادة',
+              text: widget.clinic != null?'تعديل ':'اضافة عيادة',
               color: MyColors.greenColor,
               radius: 10,
             )
@@ -677,6 +681,13 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
   @override
   void onSuccess(dynamic) {
     // TODO: implement onSuccess
+    if(widget.clinic != null) {
+      ResponseClinic2 responseClinic2 = dynamic as ResponseClinic2;
+      if (widget.onUpdate != null) widget.onUpdate!(responseClinic2.clinic);
+    }else{
+      Clinic clinic = dynamic as Clinic;
+      if (widget.onUpdate != null) widget.onUpdate!(clinic);
+    }
     Navigator.pop(context);
     showDialog(
         context: context,
@@ -702,7 +713,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                     SizedBox(
                       height: 26.h,
                     ),
-                    CustomText('تم اضافة العيادة بنجاح',
+                    CustomText(widget.clinic != null?'تم التعديل بنجاح':'تم اضافة العيادة بنجاح',
                         size: 20.sp,
                         fontFamily: 'bold',
                         color: MyColors.mainColor,
@@ -713,6 +724,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                     CustomButton(
                       onPressed: () {
                         Navigator.pop(context);
+
                       },
                       color: MyColors.greenColor,
                       text: 'موافق',

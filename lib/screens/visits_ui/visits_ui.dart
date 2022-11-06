@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:iclinic/response/response_visit.dart';
 import 'package:iclinic/screens/add_visit_ui/add_visit_ui.dart';
 import 'package:iclinic/screens/visit_inside_ui/visit_inside_ui.dart';
 import 'package:iclinic/screens/visits_ui/visits_controller.dart';
@@ -36,7 +37,7 @@ class _VisitsUiState extends State<VisitsUi>
                   widget.map["search"] = value;
                   controller.getVisits(1, map: widget.map);
                   controller.rest.refresh();
-                  controller.visits.refresh();
+                  //controller.visits.refresh();
                 },
                 searchEditingController: searchController),
             Expanded(
@@ -75,6 +76,11 @@ class _VisitsUiState extends State<VisitsUi>
                               clinicName: controller.visits[index].name,
                               doctorName: controller.visits[index].doctorName,
                               clinicLogo: controller.visits[index].logoUrl,
+                              onUpdate: (item){
+                                // setState(() {
+                                //   controller.visits.add(item as Visits);
+                                //});
+                              },
                             ));
                       });
                 },

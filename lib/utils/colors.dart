@@ -15,4 +15,5 @@ class MyColors{
   static const textColor = Color(0xFF575757);
   static const black2Color = Color(0xFF424242);
   static const backgroundColor = Color(0xFFF7F7F7);
+  static const likeColor = Color(0xFFEF386A);
 }

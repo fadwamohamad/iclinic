@@ -8,13 +8,13 @@ class ResponseClinic2 {
 
   ResponseClinic2.fromJson(Map<String, dynamic> json) {
     clinic =
-    json['clinic'] != null ? new Clinic.fromJson(json['clinic']) : null;
+    json['clinic'] != null ? Clinic.fromJson(json['clinic']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data =  Map<String, dynamic>();
-    if (this.clinic != null) {
-      data['clinic'] = this.clinic!.toJson();
+    if (clinic != null) {
+      data['clinic'] = clinic!.toJson();
     }
     return data;
   }
@@ -29,7 +29,7 @@ class Clinic {
   String? whatsappNumber;
   String? address;
   String? clinicChairs;
-  String? clinicTypeId;
+  int? clinicTypeId;
   double? longitude;
   double? latitude;
   String? timeStart;
@@ -81,7 +81,7 @@ class Clinic {
     clinicType = json['clinic_type'] != null
         ? ClinicsType.fromJson(json['clinic_type'])
         : null;
-    city = json['city'] != null ? new City.fromJson(json['city']) : null;
+    city = json['city'] != null ? City.fromJson(json['city']) : null;
     // workdays = json['all_work_days'].cast<String>();
     //json["all_work_days"] == null ? null : List<String>.from(json["all_work_days"].map((x) => x));
     // workdays = json["all_work_days"] == null? [] : List<String>.from(json["all_work_days"].map((dynamic) => dynamic));
@@ -101,7 +101,7 @@ class Clinic {
     // workdays = json['all_work_days'];
     logoUrl = json['logo_url'];
     businessCardUrl = json['business_card_url'];
-    cityId = int.parse(json['city_id'].toString());
+    cityId = json['city_id'];
   }
 
   Map<String, dynamic> toJson() {

@@ -11,6 +11,7 @@ import '../../services/apis.dart';
 import '../../utils/helpers.dart';
 
 class AddClinicController extends BaseController with Helpers {
+
   SuccessInterface view;
   AddClinicController(this.view);
 
