@@ -65,45 +65,4 @@ class Network {
 
     return dio;
   }
-/* static Future<Dio> getApiClient() async {
-
-    if( _dio == null) {
-      _dio = new Dio();
-
-      String token = ""; //await storage.read(key: USER_TOKEN);
-      _dio.interceptors.clear();
-      _dio.interceptors.add(InterceptorsWrapper(onRequest: (RequestOptions options) {
-        // Do something before request is sent
-        options.headers["Authorization"] = "Bearer " + token;
-        return options;
-      }, onResponse: (Response response) {
-        // Do something with response data
-        return response; // continue
-      }, onError: (DioError error) async {
-        // Do something with response error
-        if (error.response?.statusCode == 403) {
-          /*_dio.interceptors.requestLock.lock();
-        _dio.interceptors.responseLock.lock();
-        RequestOptions options = error.response.request;
-        FirebaseUser user = await FirebaseAuth.instance.currentUser();
-        token = await user.getIdToken(refresh: true);
-        await writeAuthKey(token);
-        options.headers["Authorization"] = "Bearer " + token;
-        _dio.interceptors.requestLock.unlock();
-        _dio.interceptors.responseLock.unlock();
-        return _dio.request(options.path,options: options);*/
-
-          return error;
-        } else {
-          return error;
-        }
-      }));
-      // _dio.options.baseUrl = baseUrl;
-      return _dio;
-    }else{
-      return _dio;
-    }
-  }
-
-  */
 }

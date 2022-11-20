@@ -131,34 +131,6 @@ class UserPreferences {
     return checkValue;
   }
 
-  // CustomerModel getUser() {
-  //    Map<String, dynamic> map;
-  //   final String? userStr =
-  //       getSharedPreferences().getString(Constants.user_info);
-  //   if (userStr != null) {
-  //     map = jsonDecode(userStr) as Map<String, dynamic>;
-  //     print(map);
-  //     dynamic object;
-  //       object = CustomerModel.fromJson(map);
-  //     return object;
-  //   } else {
-  //     return CustomerModel();
-  //   }
-  // }
-
-  // ResponseSetting? getSetting() {
-  //   Map<String, dynamic> map;
-  //   final String? userStr =
-  //       getSharedPreferences().getString(Constants.setting_SharedPref);
-  //   if (userStr != null) {
-  //     map = jsonDecode(userStr) as Map<String, dynamic>;
-  //     final ResponseSetting object = ResponseSetting.fromJson(map);
-  //     return object;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
   Future<bool> get isLoggedIn async {
     SharedPreferences _sharedPreferences = await getInstance();
     return _sharedPreferences.getBool('logged_in') ?? false;
@@ -174,24 +146,9 @@ class UserPreferences {
   }
 
   Future<void> logOut() async {
-    // SharedPreferences _sharedPreferences = await getInstance();
     UserPreferences().addBoolToSF(Constants.isLogged, false);
-    //UserPreferences().addIntToSF(Constants.cart_count,  0);
-
     UserPreferences().removeValue(Constants.user_info);
     UserPreferences().removeValue(Constants.token);
-    // await _sharedPreferences.clear();
   }
-  // ResponseSetting? getSetting() {
-  //   Map<String, dynamic> map;
-  //   String? userStr = getSharedPreferences().getString(Constants.setting_SharedPref);
-  //   print("$userStr");
-  //   if (userStr != null) {
-  //     map = jsonDecode(userStr) as Map<String, dynamic>;
-  //     final ResponseSetting object = ResponseSetting.fromJson(map);
-  //     return object;
-  //   } else {
-  //     return null;
-  //   }
-  // }
+
 }

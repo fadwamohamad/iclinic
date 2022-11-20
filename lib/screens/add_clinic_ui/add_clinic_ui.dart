@@ -10,7 +10,6 @@ import 'package:iclinic/custom_lib/custom_drop_down/custom_dropdown.dart';
 import 'package:iclinic/dialogs/image_picker.dart';
 import 'package:iclinic/interfaces/success_interface.dart';
 import 'package:iclinic/response/response_add_clinic.dart';
-import 'package:iclinic/response/response_clinic.dart';
 import 'package:iclinic/screens/add_clinic_ui/add_clinic_controller.dart';
 import 'package:iclinic/utils/colors.dart';
 import 'package:iclinic/widgets/cached_network_image.dart';

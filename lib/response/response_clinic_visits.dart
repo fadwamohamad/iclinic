@@ -26,10 +26,31 @@ class DataClinicVisits {
   }
 }
 
+class DataClinicVisit {
+  ClinicVisits? visit;
+
+  DataClinicVisit({this.visit});
+
+  DataClinicVisit.fromJson(Map<String, dynamic> json) {
+    if (json['visit'] != null) {
+      visit=ClinicVisits.fromJson(json['visit']);
+
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    if (visit != null) {
+      data['visit'] = visit?.toJson();
+    }
+    return data;
+  }
+}
+
 
 class ClinicVisits {
   int? id;
-  String? visitNumber;
+  int? visitNumber;
   String? visitDate;
   String? beginVisit;
   String? endVisit;

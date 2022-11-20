@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iclinic/interfaces/success_interface.dart';
+import 'package:iclinic/response/response_clinic_visits.dart';
 import 'package:iclinic/screens/add_visit_ui/add_visit_controller.dart';
 import 'package:intl/intl.dart';
-
-import '../../response/response_add_visit.dart';
 import '../../utils/colors.dart';
 import '../../utils/helpers.dart';
 import '../../widgets/cached_network_image.dart';
@@ -19,14 +18,14 @@ class AddVisitUi extends StatefulWidget {
   String? clinicName;
   String? doctorName;
   String? clinicLogo;
-  Function(Visit?)? onUpdate;
+  Function(ClinicVisits)? onUpdate;
 
   AddVisitUi(
       {Key? key,
       required this.clinicId,
       this.clinicName,
       this.doctorName,
-        this.onUpdate,
+      this.onUpdate,
       this.clinicLogo})
       : super(key: key);
 
@@ -204,8 +203,8 @@ class _AddVisitUiState extends State<AddVisitUi> implements SuccessInterface {
   @override
   void onSuccess(dynamic) {
     // TODO: implement onSuccess
-    // ResponseVisit responseVisit = dynamic as ResponseVisit;
-    // if (widget.onUpdate != null) widget.onUpdate!(responseVisit.visit);
+    ClinicVisits re = dynamic as ClinicVisits;
+    if (widget.onUpdate != null) widget.onUpdate!(re);
     Navigator.pop(context);
   }
 }

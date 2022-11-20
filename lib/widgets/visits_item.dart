@@ -4,14 +4,13 @@ import '../utils/colors.dart';
 import 'cached_network_image.dart';
 import 'custom_text.dart';
 
-Widget visitsItem({
-  Function()? onTap,
-  Function()? onAdd,
-  String? clinicName,
-  int? visitsCount,
-  String? clinicImage
-
-}) => GestureDetector(
+Widget visitsItem(
+        {Function()? onTap,
+        Function()? onAdd,
+        String? clinicName,
+        int? visitsCount,
+        String? clinicImage}) =>
+    GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsetsDirectional.only(
@@ -32,7 +31,12 @@ Widget visitsItem({
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(50.r),
-              child: CustomNetworkImage(image: clinicImage??'https://img.freepik.com/free-photo/top-view-background-beautiful-white-grey-brown-cream-blue-background_140725-72219.jpg?w=2000', height: 72.h, width: 72.w, fit: BoxFit.cover),
+              child: CustomNetworkImage(
+                  image: clinicImage ??
+                      'https://img.freepik.com/free-photo/top-view-background-beautiful-white-grey-brown-cream-blue-background_140725-72219.jpg?w=2000',
+                  height: 72.h,
+                  width: 72.w,
+                  fit: BoxFit.cover),
             ),
             SizedBox(
               width: 10.w,
@@ -41,7 +45,7 @@ Widget visitsItem({
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText(clinicName??"",
+                CustomText(clinicName ?? "",
                     size: 14, fontFamily: 'bold', color: MyColors.titlesColor),
                 CustomText('${visitsCount} زيارة',
                     size: 10, fontFamily: 'regular', color: MyColors.greenColor)

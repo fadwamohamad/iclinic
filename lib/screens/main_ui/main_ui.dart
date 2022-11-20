@@ -6,7 +6,6 @@ import 'package:iclinic/screens/visits_ui/visits_ui.dart';
 import 'package:iclinic/utils/colors.dart';
 import 'package:iclinic/widgets/custom_text.dart';
 import 'package:iclinic/widgets/navigation.dart';
-
 import '../../custom_lib/awesome_dialogs/awesome_dialog.dart';
 import '../../utils/user_preference.dart';
 
@@ -42,8 +41,9 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
               tabController.index = 0;
             });
             return false;
-          } else
+          } else {
             return true;
+          }
         },
         child: Scaffold(
           appBar: AppBar(

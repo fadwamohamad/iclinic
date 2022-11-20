@@ -1,5 +1,3 @@
-
-
 import 'package:iclinic/response/response_clinic_type.dart';
 
 class Visits {
@@ -15,6 +13,8 @@ class Visits {
   String? clinicChairs;
   int? visitsCount;
   String? logoUrl;
+  //ClinicVisits? clinicVisits;
+
 
   Visits(
       {this.id,
@@ -28,7 +28,9 @@ class Visits {
         this.clinicType,
         this.clinicChairs,
         this.visitsCount,
-        this.logoUrl});
+        this.logoUrl,
+       // this.clinicVisits
+      });
 
   Visits.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -43,6 +45,7 @@ class Visits {
     clinicChairs = json['clinic_chairs'];
     visitsCount = json['visits_count'];
     logoUrl = json['logo_url'];
+    //clinicVisits = json['visits'] != null ?ClinicVisits.fromJson(json['visits']):null;
   }
 
   Map<String, dynamic> toJson() {

@@ -7,6 +7,7 @@ import 'package:iclinic/screens/visit_report_ui/visit_report_ui.dart';
 import 'package:iclinic/utils/list_general_ui.dart';
 import 'package:iclinic/widgets/inside_visit_item.dart';
 import 'package:iclinic/widgets/navigation.dart';
+import '../../response/response_clinic_visits.dart';
 import '../../utils/colors.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -106,6 +107,13 @@ class _VisitInsideUiState extends State<VisitInsideUi> {
                             logo: widget.logo,
                             clinicName: widget.clinicName,
                             doctorName: widget.doctorName,
+                            onUpdate: (item) {
+                              print("itemeeee ${item.toJson()}");
+                              setState(() {
+                                controller.cliniVisits[index].visitDetail =
+                                    item as VisitDetail;
+                              });
+                            },
                           ));
                     });
               },
@@ -123,6 +131,12 @@ class _VisitInsideUiState extends State<VisitInsideUi> {
                 clinicName: widget.clinicName,
                 clinicLogo: widget.logo,
                 doctorName: widget.doctorName,
+                onUpdate: (item) {
+                  setState(() {
+                    controller.cliniVisits.add(item as ClinicVisits);
+                  });
+                  print("item ${item.toJson()}");
+                },
               ));
         },
         backgroundColor: MyColors.greenColor,

@@ -18,8 +18,14 @@ class VisitReportUi extends StatefulWidget {
   String? logo;
   String? clinicName;
   String? doctorName;
+  Function(VisitDetail)? onUpdate;
   VisitReportUi(
-      {Key? key, this.item, this.logo, this.clinicName, this.doctorName})
+      {Key? key,
+      this.item,
+      this.logo,
+      this.clinicName,
+      this.doctorName,
+      this.onUpdate})
       : super(key: key);
 
   @override
@@ -81,8 +87,7 @@ class _VisitReportUiState extends State<VisitReportUi>
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50.r),
                   child: CustomNetworkImage(
-                      image: widget.logo ??
-                          'https://img.freepik.com/free-photo/top-view-background-beautiful-white-grey-brown-cream-blue-background_140725-72219.jpg?w=2000',
+                      image: widget.logo ?? "",
                       height: 72.h,
                       width: 72.w,
                       fit: BoxFit.cover),
@@ -278,7 +283,6 @@ class _VisitReportUiState extends State<VisitReportUi>
                 "check_another_app": another_app,
                 "another_app": anotherAppController.text
               }, widget.item?.id ?? 0);
-
             },
             text: 'حفظ التعديلات',
             color: MyColors.greenColor,
@@ -291,6 +295,8 @@ class _VisitReportUiState extends State<VisitReportUi>
   @override
   void onSuccess(dynamic) {
     // TODO: implement onSuccess
+    VisitDetail re = dynamic as VisitDetail;
+    if (widget.onUpdate != null) widget.onUpdate!(re);
     Navigator.pop(context);
   }
 

@@ -5,12 +5,12 @@ import 'package:flutter_svg/svg.dart';
 import '../utils/colors.dart';
 import 'custom_text.dart';
 
-Widget insidesVisitItem({
-  Function()? onTap,
-  String? visitNum,
-  String? visitDate,
-  String? visitTime
-}) => GestureDetector(
+Widget insidesVisitItem(
+        {Function()? onTap,
+        int? visitNum,
+        String? visitDate,
+        String? visitTime}) =>
+    GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsetsDirectional.only(
@@ -44,7 +44,7 @@ Widget insidesVisitItem({
                     SizedBox(
                       width: 5.w,
                     ),
-                    CustomText(visitDate??"",
+                    CustomText(visitDate ?? "",
                         size: 10,
                         fontFamily: 'regular',
                         color: MyColors.greenColor),
@@ -55,7 +55,7 @@ Widget insidesVisitItem({
                     SizedBox(
                       width: 5.w,
                     ),
-                    CustomText(visitTime??"",
+                    CustomText(visitTime ?? "",
                         size: 10,
                         fontFamily: 'regular',
                         color: MyColors.greenColor),

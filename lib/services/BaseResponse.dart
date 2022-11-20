@@ -1,13 +1,13 @@
 import 'package:iclinic/response/response_add_clinic.dart';
-import 'package:iclinic/response/response_add_visit.dart';
 import 'package:iclinic/response/response_area.dart';
 import 'package:iclinic/response/response_city.dart';
-import 'package:iclinic/response/response_clinic.dart';
 import 'package:iclinic/response/response_clinic_type.dart';
 import 'package:iclinic/response/response_clinic_visits.dart';
 import 'package:iclinic/response/response_user.dart';
 import 'package:iclinic/response/verification_token.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../response/response_update_visit.dart';
 
 
 @JsonSerializable()
@@ -51,8 +51,6 @@ class _Converter<T> implements JsonConverter<T, dynamic> {
       return ResponseUser.fromJson(jsonx) as T;
     }else if(T == ResponseClinic2){
       return ResponseClinic2.fromJson(jsonx) as T;
-    }else if(T == ResponseVisit){
-      return ResponseVisit.fromJson(jsonx) as T;
     }else if(T == DataClinicVisits){
       return DataClinicVisits.fromJson(jsonx) as T;
     }else if(T == Clinic){
@@ -69,6 +67,10 @@ class _Converter<T> implements JsonConverter<T, dynamic> {
       return VisitDetail.fromJson(jsonx) as T;
     }else if(T == ClinicVisits){
       return ClinicVisits.fromJson(jsonx) as T;
+    }else if(T == DataClinicVisit){
+      return DataClinicVisit.fromJson(jsonx) as T;
+    }else if(T ==UpdateVisitReportResponse){
+      return UpdateVisitReportResponse.fromJson(jsonx) as T;
     }
     return jsonx as T;
   }

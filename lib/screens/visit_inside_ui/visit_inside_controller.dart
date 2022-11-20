@@ -1,13 +1,10 @@
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:iclinic/models/insides_visit_model.dart';
 import 'package:iclinic/response/response_clinic_visits.dart';
-
 import '../../services/BaseResponse.dart';
-import '../../services/BaseResponseList.dart';
 import '../../services/apis.dart';
 import '../../services/webservice.dart';
 
-class InsideVisitController{
+class InsideVisitController {
   Rx<LoadingStatus> status = LoadingStatus.loading.obs;
   Rx<bool> isLoaded = false.obs;
   RxList<ClinicVisits> cliniVisits = <ClinicVisits>[].obs;
@@ -16,11 +13,12 @@ class InsideVisitController{
   Rx<String> error = "".obs;
 
   getClinicVisits(
-      int clinicVisitId,
-      int? page, {
-        Map<String, dynamic>? map,
-      }) async {
-    BaseResponse<DataClinicVisits>? response = await Apis().getClinicVisits(clinicVisitId);
+    int clinicVisitId,
+    int? page, {
+    Map<String, dynamic>? map,
+  }) async {
+    BaseResponse<DataClinicVisits>? response =
+        await Apis().getClinicVisits(clinicVisitId);
     if (response != null) {
       if (response.result?.visits?.isEmpty ?? true) {
         isMoreDataAvailable.value = false;
@@ -44,7 +42,6 @@ class InsideVisitController{
       } else if (response.code == 401) {
         status.value = LoadingStatus.unauthenticated;
       }
-
     } else {
       status.value = LoadingStatus.error;
       error.value = "Response Error";

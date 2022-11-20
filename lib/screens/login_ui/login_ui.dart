@@ -8,8 +8,6 @@ import 'package:iclinic/widgets/custom_button.dart';
 import 'package:iclinic/widgets/custom_text.dart';
 import 'package:iclinic/widgets/custom_text_field.dart';
 import 'package:iclinic/widgets/navigation.dart';
-
-import '../../services/apis.dart';
 import '../../utils/constants.dart';
 import '../../utils/user_preference.dart';
 import 'login_controller.dart';
@@ -21,7 +19,7 @@ class LoginUi extends StatefulWidget {
   State<LoginUi> createState() => _LoginUiState();
 }
 
-class _LoginUiState extends State<LoginUi> implements SuccessInterface{
+class _LoginUiState extends State<LoginUi> implements SuccessInterface {
   var formLoginKey = GlobalKey<FormState>();
   TextEditingController mobileController = TextEditingController();
   TextEditingController passController = TextEditingController();
@@ -53,7 +51,6 @@ class _LoginUiState extends State<LoginUi> implements SuccessInterface{
         child: Form(
           key: formLoginKey,
           child: ListView(
-            //crossAxisAlignment: CrossAxisAlignment.center,
             padding:
                 EdgeInsetsDirectional.only(start: 38.w, end: 38.w, top: 70.h),
             children: [
@@ -106,8 +103,8 @@ class _LoginUiState extends State<LoginUi> implements SuccessInterface{
               Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: TextButton(
-                  onPressed: () async{
-                   navigateTo(context, ForgetPasswordUi());
+                  onPressed: () async {
+                    navigateTo(context, const ForgetPasswordUi());
                   },
                   child: CustomText('نسيت كلمة المرور',
                       padding: EdgeInsetsDirectional.only(start: 20.w),
@@ -120,13 +117,13 @@ class _LoginUiState extends State<LoginUi> implements SuccessInterface{
                 height: 90.h,
               ),
               CustomButton(
-                onPressed: () async{
+                onPressed: () async {
                   if (formLoginKey.currentState!.validate()) {
                     bool c = await loginController.login(
-                        mobileController.text,
-                        passController.text);
+                        mobileController.text, passController.text);
                     if (c) {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainUi()));
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => MainUi()));
                     }
                   }
                 },

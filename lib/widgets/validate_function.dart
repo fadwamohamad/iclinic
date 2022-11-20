@@ -9,7 +9,7 @@ class ValidateFunctions {
     String pattern = r'(^(((\+)|(00))?(([0-9]{1,3}))|(0))([0-9]{9})$)';
 
     // (\\+|00)
-    RegExp regExp =  RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (value.isEmpty) {
       return 'رقم الهاتف مطلوب';
     } else if (!regExp.hasMatch(value)) {
@@ -22,7 +22,7 @@ class ValidateFunctions {
     String pattern = r'(^(((\+)|(00))?(([0-9]{1,3}))|(0))([0-9]{9})$)';
 
     // (\\+|00)
-    RegExp regExp =  RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
       return false;
     } else {

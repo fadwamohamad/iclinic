@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../interfaces/success_interface.dart';
 import '../../response/response_user.dart';
 import '../../services/BaseResponse.dart';
@@ -8,16 +7,16 @@ import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 import '../../utils/user_preference.dart';
 
-class LoginController with Helpers{
+class LoginController with Helpers {
   SuccessInterface view;
   BuildContext context;
 
   LoginController(this.context, this.view);
 
   Future<bool> login(
-      String phone,
-      String password,
-      ) async {
+    String phone,
+    String password,
+  ) async {
     showLoading();
     Map<String, dynamic> map = <String, dynamic>{};
     map["email"] = phone;
@@ -25,22 +24,21 @@ class LoginController with Helpers{
     await UserPreferences().fAddStringToSF(Constants.phone_number, phone);
     await UserPreferences().fAddStringToSF(Constants.password, password);
     try {
-      BaseResponse<ResponseUser>? response = await Apis().login<ResponseUser>(map);
+      BaseResponse<ResponseUser>? response =
+          await Apis().login<ResponseUser>(map);
 
       if (response != null) {
         if (response.status) {
           await UserPreferences()
-              .fAddStringToSF(Constants.token, response.result?.token??"");
-          await UserPreferences().fAddObjectToSF(Constants.user_info, response.result?.user??Object());
+              .fAddStringToSF(Constants.token, response.result?.token ?? "");
+          await UserPreferences().fAddObjectToSF(
+              Constants.user_info, response.result?.user ?? Object());
           UserPreferences().addBoolToSF(Constants.isLogged, true);
-          print('kkmmmm${response.status}');
-          //String? token = await FirebaseMessaging.instance.getToken();
-          //Apis().fcmSend(token!);
           dismissLoading();
           return response.status;
         } else {
           dismissLoading();
-          showMessage(response.msg??"");
+          showMessage(response.msg ?? "");
           return response.status;
         }
       } else {
@@ -59,10 +57,7 @@ class LoginController with Helpers{
       showMessage(error.toString());
       return false;
     }
-
-
   }
-
 
   Future<bool> forgetPassword(String phone) async {
     Map<String, dynamic> map = <String, dynamic>{};
@@ -73,7 +68,8 @@ class LoginController with Helpers{
       dismissLoading();
       if (response != null) {
         if (response.status) {
-          showMessage(response.msg ?? "تم ارسال الكود الى بريدك الالكتروني", error: false);
+          showMessage(response.msg ?? "تم ارسال الكود الى بريدك الالكتروني",
+              error: false);
           view.onSuccess(response.status);
           return response.status;
         } else {
@@ -84,7 +80,7 @@ class LoginController with Helpers{
         showMessage('Response Error', error: true);
         return false;
       }
-    }catch(error){
+    } catch (error) {
       dismissLoading();
       showMessage(error.toString(), error: true);
       return false;

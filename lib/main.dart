@@ -1,18 +1,16 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:iclinic/screens/login_ui/login_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:iclinic/screens/main_ui/main_ui.dart';
 import 'package:iclinic/utils/colors.dart';
 import 'package:iclinic/utils/constants.dart';
 import 'package:iclinic/utils/user_preference.dart';
-
 import 'custom_lib/flutter_easyloading/src/animations/animation.dart';
 import 'custom_lib/flutter_easyloading/src/easy_loading.dart';
 bool? isLogged = false;
-Widget? initialScreen = MainUi();
+Widget? initialScreen = const MainUi();
 
 Widget getWidget(Map<String, dynamic> data, bool fromNotification) {
   if (data['type'] != null) {
@@ -77,7 +75,6 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
-            //useInheritedMediaQuery: true,
             locale: DevicePreview.locale(context),
             theme: ThemeData(
               scaffoldBackgroundColor: MyColors.backgroundColor,

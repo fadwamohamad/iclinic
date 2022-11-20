@@ -30,12 +30,11 @@ class _ShimmerWidgetState extends State<ShimmerWidget> {
                     padding: EdgeInsets.only(bottom: 10.h),
                     child: Align(
                       alignment: AlignmentDirectional.centerStart,
-                      child:  Container(
-                          width: getRandom(),
-                          height: 12.0.h,
-                          color: Colors.white,
-                        ),
-
+                      child: Container(
+                        width: getRandom(),
+                        height: 12.0.h,
+                        color: Colors.white,
+                      ),
                     )),
                 itemCount: 35,
               ),
@@ -46,12 +45,11 @@ class _ShimmerWidgetState extends State<ShimmerWidget> {
     );
   }
 
- double getRandom() {
-   double m= (Random().nextDouble()) * 400.w;
-   while (m<50 ) {
-     m= (Random().nextDouble()) * 400.w;
-   }
-   return m;
-
+  double getRandom() {
+    double m = (Random().nextDouble()) * 400.w;
+    while (m < 50) {
+      m = (Random().nextDouble()) * 400.w;
+    }
+    return m;
   }
 }

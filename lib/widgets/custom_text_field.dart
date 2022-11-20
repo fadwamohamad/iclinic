@@ -198,7 +198,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     });
                   },
                   child: Icon(
-                    widget.obscureText ? Icons.visibility_off : Icons.visibility,
+                    widget.obscureText
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                     color: MyColors.hintColor,
                   ))
               : widget.suffixIcon,

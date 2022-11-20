@@ -20,7 +20,7 @@ class CustomButton extends StatelessWidget {
     this.text = '',
     this.priceText = '',
     required this.onPressed,
-    this.radius=5,
+    this.radius = 5,
     this.fontColor = MyColors.whiteColor,
     this.fontSize = 16,
     this.height = 54,
@@ -34,14 +34,17 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: CustomText(text,
-          size: fontSize, color: fontColor,fontFamily: fontFamily,height: 2.5),
       style: ElevatedButton.styleFrom(
         minimumSize: Size(width.w, height.h),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius.r)),
         primary: color,
       ),
+      child: CustomText(text,
+          size: fontSize,
+          color: fontColor,
+          fontFamily: fontFamily,
+          height: 2.5),
     );
   }
 }

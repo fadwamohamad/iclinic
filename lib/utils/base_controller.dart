@@ -64,5 +64,4 @@ class BaseController with Helpers {
       showMessage("Response Error", error: true);
     }
   }
-
 }

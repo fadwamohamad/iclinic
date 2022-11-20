@@ -6,13 +6,13 @@ import '../response/response_add_clinic.dart';
 import '../utils/colors.dart';
 import 'custom_text.dart';
 
-Widget clinicsItem(
-    Clinic? item,{
-  String? imageUrl,
-  String? clinicName,
-  String? doctorName,
-  Function(Clinic)? onDelete,
-  Function()? onEdit}) => Container(
+Widget clinicsItem(Clinic? item,
+        {String? imageUrl,
+        String? clinicName,
+        String? doctorName,
+        Function(Clinic)? onDelete,
+        Function()? onEdit}) =>
+    Container(
       padding: EdgeInsetsDirectional.only(
           start: 17.w, end: 17.w, top: 19.h, bottom: 19.h),
       margin: EdgeInsetsDirectional.only(bottom: 19.h),
@@ -32,7 +32,7 @@ Widget clinicsItem(
           ClipRRect(
             borderRadius: BorderRadius.circular(50.r),
             child: CustomNetworkImage(
-                image:imageUrl??
+                image: imageUrl ??
                     'https://img.freepik.com/free-photo/top-view-background-beautiful-white-grey-brown-cream-blue-background_140725-72219.jpg?w=2000',
                 height: 72.h,
                 width: 72.w,
@@ -45,7 +45,7 @@ Widget clinicsItem(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText(clinicName??"",
+              CustomText(clinicName ?? "",
                   size: 14, fontFamily: 'bold', color: MyColors.titlesColor),
               CustomText('د. $doctorName',
                   size: 10, fontFamily: 'regular', color: MyColors.grey1Color)
@@ -76,7 +76,7 @@ Widget clinicsItem(
                   color: MyColors.grey6Color,
                 ),
                 child: IconButton(
-                    onPressed: onDelete!=null?() => onDelete(item!):null,
+                    onPressed: onDelete != null ? () => onDelete(item!) : null,
                     icon: SvgPicture.asset('assets/icons/delete.svg')),
               )
             ],

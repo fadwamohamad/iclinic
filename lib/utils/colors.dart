@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MyColors{
+class MyColors {
   static const mainColor = Color(0xFF19426D);
   static const greenColor = Color(0xFF55B936);
   static const hintColor = Color(0xFFCCCCCC);

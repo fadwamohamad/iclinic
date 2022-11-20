@@ -9,7 +9,7 @@ import '../../widgets/custom_text.dart';
 import '../../widgets/custom_text_field.dart';
 
 class ResetPassUi extends StatefulWidget {
-   ResetPassUi({Key? key}) : super(key: key);
+  ResetPassUi({Key? key}) : super(key: key);
 
   @override
   State<ResetPassUi> createState() => _ResetPassUiState();
@@ -27,6 +27,7 @@ class _ResetPassUiState extends State<ResetPassUi> implements SuccessInterface {
     super.initState();
     resetPassContoller = ResetPassContoller(this);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +37,7 @@ class _ResetPassUiState extends State<ResetPassUi> implements SuccessInterface {
           child: ListView(
             //crossAxisAlignment: CrossAxisAlignment.center,
             padding:
-            EdgeInsetsDirectional.only(start: 38.w, end: 38.w, top: 70.h),
+                EdgeInsetsDirectional.only(start: 38.w, end: 38.w, top: 70.h),
             children: [
               Image.asset('assets/images/iclinic_logo.png'),
               SizedBox(
@@ -79,11 +80,10 @@ class _ResetPassUiState extends State<ResetPassUi> implements SuccessInterface {
                 height: 130.h,
               ),
               CustomButton(
-                onPressed: () async{
+                onPressed: () async {
                   if (formLoginKey.currentState!.validate()) {
-                     await resetPassContoller.resetPass(
-                        passController.text,
-                        confirmPassController.text);
+                    await resetPassContoller.resetPass(
+                        passController.text, confirmPassController.text);
                   }
                 },
                 text: 'تأكيد',
@@ -98,8 +98,9 @@ class _ResetPassUiState extends State<ResetPassUi> implements SuccessInterface {
   }
 
   @override
-  void onSuccess(dynamic) async{
+  void onSuccess(dynamic) async {
     // TODO: implement onSuccess
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainUi()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => MainUi()));
   }
 }

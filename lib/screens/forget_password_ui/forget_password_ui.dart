@@ -62,7 +62,7 @@ class _ForgetPasswordUiState extends State<ForgetPasswordUi>
               CustomTextField(
                 controller: mobileNumController,
                 textInputType: TextInputType.phone,
-                hintText: 'ادخل رقم المحمول' ,
+                hintText: 'ادخل رقم المحمول',
               ),
               //CustomPinCode(controller: pinCodeController),
               SizedBox(
@@ -71,8 +71,7 @@ class _ForgetPasswordUiState extends State<ForgetPasswordUi>
               CustomButton(
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                     await controller
-                        .forgetPassword(mobileNumController.text);
+                    await controller.forgetPassword(mobileNumController.text);
                   }
                 },
                 text: 'إرسال',
@@ -89,7 +88,11 @@ class _ForgetPasswordUiState extends State<ForgetPasswordUi>
   @override
   void onSuccess(dynamic) {
     // TODO: implement onSuccess
-    ResponseVerification re= dynamic as ResponseVerification;
-    navigateTo(context, VerificationUi(token: re.token,));
+    ResponseVerification re = dynamic as ResponseVerification;
+    navigateTo(
+        context,
+        VerificationUi(
+          token: re.token,
+        ));
   }
 }

@@ -15,13 +15,14 @@ import '../reset_pass_ui/reset_pass_ui.dart';
 
 class VerificationUi extends StatefulWidget {
   String? token;
-  VerificationUi({Key? key,required this.token}) : super(key: key);
+  VerificationUi({Key? key, required this.token}) : super(key: key);
 
   @override
   State<VerificationUi> createState() => _VerificationUiState();
 }
 
-class _VerificationUiState extends State<VerificationUi>implements GeneralInterface {
+class _VerificationUiState extends State<VerificationUi>
+    implements GeneralInterface {
   var formKey = GlobalKey<FormState>();
   TextEditingController pinCodeController = TextEditingController();
   late VerificationController controller = VerificationController(this);
@@ -85,15 +86,10 @@ class _VerificationUiState extends State<VerificationUi>implements GeneralInterf
                 height: 240.h,
               ),
               CustomButton(
-                onPressed: () async{
+                onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                   // bool b =
-                    await controller
-                        .verfication(pinCodeController.text,widget.token??"");
-                    //if (b) {
-
-                    //}
-
+                    await controller.verfication(
+                        pinCodeController.text, widget.token ?? "");
                   }
                 },
                 text: 'تأكيد',
@@ -113,13 +109,13 @@ class _VerificationUiState extends State<VerificationUi>implements GeneralInterf
   }
 
   @override
-  void onSuccess(dynamic) async{
+  void onSuccess(dynamic) async {
     // TODO: implement onSuccess
-    ResponseUser response=dynamic as ResponseUser;
+    ResponseUser response = dynamic as ResponseUser;
     await UserPreferences()
-        .fAddStringToSF(Constants.token, response.token??"");
+        .fAddStringToSF(Constants.token, response.token ?? "");
     await UserPreferences()
-        .fAddObjectToSF(Constants.user_info, response.user??Object());
-    navigateTo(context,  ResetPassUi());
+        .fAddObjectToSF(Constants.user_info, response.user ?? Object());
+    navigateTo(context, ResetPassUi());
   }
 }
