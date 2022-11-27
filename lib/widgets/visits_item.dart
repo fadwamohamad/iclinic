@@ -29,8 +29,8 @@ Widget visitsItem(
             color: MyColors.whiteColor),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(50.r),
+            ClipOval(
+              //borderRadius: BorderRadius.circular(50.r),
               child: CustomNetworkImage(
                   image: clinicImage ??
                       'https://img.freepik.com/free-photo/top-view-background-beautiful-white-grey-brown-cream-blue-background_140725-72219.jpg?w=2000',

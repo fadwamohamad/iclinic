@@ -50,8 +50,8 @@ class _VisitInsideUiState extends State<VisitInsideUi> {
               padding: EdgeInsetsDirectional.only(start: 34.w),
               child: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50.r),
+                  ClipOval(
+                   // borderRadius: BorderRadius.circular(50.r),
                     child: CustomNetworkImage(
                         image: widget.logo ??
                             'https://img.freepik.com/free-photo/top-view-background-beautiful-white-grey-brown-cream-blue-background_140725-72219.jpg?w=2000',

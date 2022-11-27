@@ -82,13 +82,11 @@ class UserPreferences {
   Future<dynamic> getBoolSF(String key) async {
     SharedPreferences prefs = await getInstance();
     bool? boolValue = prefs.getBool(key);
-
     return boolValue != null ? boolValue : false;
   }
 
   bool getBool(String key) {
     bool? boolValue = getSharedPreferences().getBool(key);
-
     return boolValue ?? false;
   }
 
@@ -150,5 +148,4 @@ class UserPreferences {
     UserPreferences().removeValue(Constants.user_info);
     UserPreferences().removeValue(Constants.token);
   }
-
 }

@@ -84,8 +84,8 @@ class _VisitReportUiState extends State<VisitReportUi>
             padding: EdgeInsetsDirectional.only(start: 17.w),
             child: Row(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(50.r),
+                ClipOval(
+                  //borderRadius: BorderRadius.circular(50.r),
                   child: CustomNetworkImage(
                       image: widget.logo ?? "",
                       height: 72.h,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iclinic/screens/clinics_ui/clinics_ui.dart';
 import 'package:iclinic/screens/login_ui/login_ui.dart';
@@ -50,6 +51,7 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
             title: CustomText('الرئيسية',
                 size: 20.sp, fontFamily: 'bold', color: MyColors.titlesColor),
             backgroundColor: MyColors.whiteColor,
+            systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: MyColors.whiteColor),
             centerTitle: true,
             elevation: 0,
             actions: [
@@ -71,7 +73,7 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
                 },
                 child: Container(
                   padding: EdgeInsetsDirectional.all(7.r),
-                  margin: EdgeInsetsDirectional.only(end: 10.w),
+                  margin: EdgeInsetsDirectional.only(end: 15.w),
                   decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: MyColors.mainColor),
                   child: Icon(

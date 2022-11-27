@@ -181,7 +181,7 @@ class _AddVisitUiState extends State<AddVisitUi> implements SuccessInterface {
             },
           ),
           SizedBox(
-            height: 300.h,
+            height: 200.h,
           ),
           CustomButton(
             onPressed: () {
