@@ -41,7 +41,6 @@ class _ClinicsUiState extends State<ClinicsUi>
                       widget.map["search"] = value;
                       controller.getClinics(1, map: widget.map);
                       controller.rest.refresh();
-                      //controller.clinics.refresh();
                     },
                     searchEditingController: searchController),
                 Expanded(

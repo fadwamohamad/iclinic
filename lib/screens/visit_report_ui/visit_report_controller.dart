@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:iclinic/response/response_clinic_visits.dart';
+
 import '../../interfaces/success_interface.dart';
 import '../../response/response_update_visit.dart';
 import '../../services/BaseResponse.dart';

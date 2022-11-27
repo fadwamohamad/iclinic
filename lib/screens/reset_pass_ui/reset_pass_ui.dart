@@ -101,6 +101,6 @@ class _ResetPassUiState extends State<ResetPassUi> implements SuccessInterface {
   void onSuccess(dynamic) async {
     // TODO: implement onSuccess
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => MainUi()));
+        context, MaterialPageRoute(builder: (context) => const MainUi()));
   }
 }

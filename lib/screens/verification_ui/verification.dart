@@ -33,7 +33,6 @@ class _VerificationUiState extends State<VerificationUi>
         child: Form(
           key: formKey,
           child: ListView(
-            //crossAxisAlignment: CrossAxisAlignment.center,
             padding:
                 EdgeInsetsDirectional.only(start: 38.w, end: 38.w, top: 70.h),
             children: [
@@ -59,7 +58,7 @@ class _VerificationUiState extends State<VerificationUi>
                 child: PinCodeTextField(
                   appContext: context,
                   length: 4,
-                  onChanged: (ff) {},
+                  onChanged: (result) {},
                   controller: pinCodeController,
                   enableActiveFill: true,
                   validator: (String? value) =>
@@ -74,7 +73,6 @@ class _VerificationUiState extends State<VerificationUi>
                     selectedColor: Colors.red,
                     activeColor: MyColors.greenColor,
                     activeFillColor: Colors.white,
-                    //disabledColor: const Color(0xFFE1F1FF),
                     inactiveColor: const Color(0xFFE1F1FF),
                     borderWidth: 1,
                     errorBorderColor: Colors.red,

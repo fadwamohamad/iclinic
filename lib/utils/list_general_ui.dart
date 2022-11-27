@@ -118,7 +118,7 @@ class _ListGeneralUiState extends State<ListGeneralUi> {
   Widget separatorBuilder(BuildContext context, int index) {
     return widget.separatorBuilder != null
         ? widget.separatorBuilder!(context, index)
-        : SizedBox.shrink();
+        : const SizedBox.shrink();
   }
 
   bool isNotEmpty() {
@@ -160,7 +160,7 @@ class _ListGeneralUiState extends State<ListGeneralUi> {
         ),
       );
     } else if (widget.status == LoadingStatus.unauthenticated) {
-      return ListView(physics: NeverScrollableScrollPhysics(), children: [
+      return ListView(physics: const NeverScrollableScrollPhysics(), children: [
         Container(
             alignment: Alignment.center,
             height: MediaQuery.of(context).size.height,
@@ -194,7 +194,7 @@ class _ListGeneralUiState extends State<ListGeneralUi> {
             child: ListView.separated(
               shrinkWrap: false,
               separatorBuilder: separatorBuilder,
-              physics: BouncingScrollPhysics(
+              physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               controller: scrollController,

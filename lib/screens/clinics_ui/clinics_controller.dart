@@ -28,7 +28,6 @@ class ClinicsController with Helpers {
       if (page == 1) {
         clinics.clear();
       }
-      print("hhhh${response.result?.length}");
       clinics.value.addAll(response.result ?? []);
       clinics.refresh();
 

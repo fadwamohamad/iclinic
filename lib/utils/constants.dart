@@ -1,5 +1,5 @@
 class Constants {
-  static const String domain = "staging.iclinic.ps";
+  static const String domain = "iclinic.ps";
   static const String baseUrl = "https://$domain/api/";
   static const String token = "token";
   static const String isLogged = "logged_in";

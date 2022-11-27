@@ -47,7 +47,6 @@ class LoginController with Helpers {
         return false;
       }
     } on Exception catch (exception) {
-      print(exception);
       dismissLoading();
       showMessage("Exception Login");
       return false;
@@ -55,34 +54,6 @@ class LoginController with Helpers {
       print(error);
       dismissLoading();
       showMessage(error.toString());
-      return false;
-    }
-  }
-
-  Future<bool> forgetPassword(String phone) async {
-    Map<String, dynamic> map = <String, dynamic>{};
-    map["email"] = phone;
-    try {
-      showLoading();
-      BaseResponse? response = await Apis().forget_password(map);
-      dismissLoading();
-      if (response != null) {
-        if (response.status) {
-          showMessage(response.msg ?? "تم ارسال الكود الى بريدك الالكتروني",
-              error: false);
-          view.onSuccess(response.status);
-          return response.status;
-        } else {
-          showMessage(response.msg ?? '');
-          return response.status;
-        }
-      } else {
-        showMessage('Response Error', error: true);
-        return false;
-      }
-    } catch (error) {
-      dismissLoading();
-      showMessage(error.toString(), error: true);
       return false;
     }
   }

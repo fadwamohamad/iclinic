@@ -28,7 +28,6 @@ class InsideVisitController {
       if (page == 1) {
         cliniVisits.clear();
       }
-      print("hhhh${response.result?.visits?.length}");
       cliniVisits.value.addAll(response.result?.visits ?? []);
       cliniVisits.refresh();
 

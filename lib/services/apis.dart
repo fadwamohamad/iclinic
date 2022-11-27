@@ -85,12 +85,6 @@ class Apis {
     return response!;
   }
 
-  Future<BaseResponse<ResponseClinic2>?> showClinic(
-      Map<String, dynamic> map, int id) async {
-    BaseResponse<ResponseClinic2>? response =
-        await Webservice().get("clinics/$id");
-    return response;
-  }
 
   Future<BaseResponse<T>?> deleteClinic<T>(int id) async {
     BaseResponse<T>? response = await Webservice().delete("clinics/$id");

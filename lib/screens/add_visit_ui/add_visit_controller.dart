@@ -17,7 +17,6 @@ class AddVisitController with Helpers {
       if (response!.status) {
         showMessage(response.msg ?? "تم إضافة الزيارة بنجاح", error: false);
         view.onSuccess(response.result?.visit);
-        print("reeeeee ${response.result?.toJson()}");
       } else {
         showMessage(response.msg ?? "");
       }

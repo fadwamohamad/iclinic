@@ -20,7 +20,6 @@ class AddClinicController extends BaseController with Helpers {
       showLoading();
       BaseResponse<ResponseClinic2>? response = await Apis()
           .addClinic(map, logoImage: logoImage, cardImage: cardImage);
-      print(response?.result);
       dismissLoading();
       if (response!.status) {
         showMessage(response.msg ?? "تم إضافة العيادة بنجاح", error: false);
@@ -42,9 +41,6 @@ class AddClinicController extends BaseController with Helpers {
     File? cardImage,
   }) async {
     try {
-      print("cardImage?.path");
-      print(cardImage?.path);
-      print(logoImage?.path);
       showLoading();
       BaseResponse<ResponseClinic2>? response = await Apis().updateClinic(
           map, clinicId,

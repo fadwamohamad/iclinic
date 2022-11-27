@@ -52,6 +52,35 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
             backgroundColor: MyColors.whiteColor,
             centerTitle: true,
             elevation: 0,
+            actions: [
+              InkWell(
+                onTap: () {
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.INFO,
+                    animType: AnimType.BOTTOMSLIDE,
+                    desc: 'هل تريد بالتأكيد تسجيل خروج من التطبيق؟',
+                    btnOkText: "تأكيد",
+                    btnCancelText: "إلغاء",
+                    btnCancelOnPress: () {},
+                    btnOkOnPress: () {
+                      UserPreferences().logOut();
+                      navigateTo(context, const LoginUi());
+                    },
+                  ).show();
+                },
+                child: Container(
+                  padding: EdgeInsetsDirectional.all(7.r),
+                  margin: EdgeInsetsDirectional.only(end: 10.w),
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: MyColors.mainColor),
+                  child: Icon(
+                    Icons.logout,
+                    size: 18.sp,
+                  ),
+                ),
+              )
+            ],
             bottom: TabBar(
               controller: tabController,
               indicatorColor: MyColors.greenColor,
@@ -84,27 +113,6 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
               map: {},
             )
           ]),
-          floatingActionButton: FloatingActionButton(
-            elevation: 8,
-            onPressed: () {
-              AwesomeDialog(
-                context: context,
-                dialogType: DialogType.INFO,
-                animType: AnimType.BOTTOMSLIDE,
-                desc: 'هل تريد بالتأكيد تسجيل خروج من التطبيق؟',
-                btnOkText: "تأكيد",
-                btnCancelText: "إلغاء",
-                btnCancelOnPress: () {},
-                btnOkOnPress: () {
-                  UserPreferences().logOut();
-                  navigateTo(context, const LoginUi());
-                },
-              ).show();
-            },
-            backgroundColor: MyColors.mainColor,
-            child: const Icon(Icons.logout),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         ),
       ),
     );

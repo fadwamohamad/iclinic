@@ -47,7 +47,6 @@ class DataClinicVisit {
   }
 }
 
-
 class ClinicVisits {
   int? id;
   int? visitNumber;

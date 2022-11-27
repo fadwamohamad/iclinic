@@ -27,7 +27,8 @@ class AddClinicUi extends StatefulWidget {
   String? title;
   Function(Clinic?)? onUpdate;
 
-  AddClinicUi({Key? key, this.clinic,this.title,this.onUpdate}) : super(key: key);
+  AddClinicUi({Key? key, this.clinic, this.title, this.onUpdate})
+      : super(key: key);
 
   @override
   State<AddClinicUi> createState() => _AddClinicUiState();
@@ -76,11 +77,11 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
   late String clinicCard = widget.clinic?.businessCardUrl ?? "";
   late String clinicLogo = widget.clinic?.logoUrl ?? "";
   late AddClinicController controller;
-  late int clinicTypeId = widget.clinic?.clinicType?.id?? 0;
+  late int clinicTypeId = widget.clinic?.clinicType?.id ?? 0;
   late int cityId = widget.clinic?.city?.id ?? 0;
   late int countryId = widget.clinic?.city?.area?.id ?? 0;
-  late double longitude = widget.clinic?.longitude??0.0;
-  late double latitude = widget.clinic?.latitude??0.0;
+  late double longitude = widget.clinic?.longitude ?? 0.0;
+  late double latitude = widget.clinic?.latitude ?? 0.0;
   static const CameraPosition _kGoogle = CameraPosition(
     target: LatLng(31.243600, 34.232400),
     zoom: 14.4746,
@@ -116,30 +117,55 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
     controller.getClinicType();
     controller.getCountries();
 
-    getUserCurrentLocation().then((value) async {
-      print(value.latitude.toString() + " " + value.longitude.toString());
-      _markers.add(Marker(
-          markerId: const MarkerId("2"),
-          position: LatLng(value.latitude, value.longitude),
-          draggable: true,
-          infoWindow: const InfoWindow(
-            title: 'My Current Location',
-          ),
-          onDragEnd: ((newPosition) {
-            setState(() {
-              latitude = newPosition.latitude;
-              longitude = newPosition.longitude;
-            });
-          })));
-      CameraPosition cameraPosition = CameraPosition(
-        target: LatLng(value.latitude, value.longitude),
-        zoom: 14,
-      );
-      final GoogleMapController controller = await _controller.future;
-      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-      setState(() {});
-    });
-
+    if (widget.clinic == null) {
+      getUserCurrentLocation().then((value) async {
+        _markers.add(Marker(
+            markerId: MarkerId("$latitude"),
+            position: LatLng(value.latitude, value.longitude),
+            draggable: true,
+            infoWindow: const InfoWindow(
+              title: 'My Current Location',
+            ),
+            onDragEnd: ((newPosition) {
+              setState(() {
+                latitude = newPosition.latitude;
+                longitude = newPosition.longitude;
+              });
+            })));
+        CameraPosition cameraPosition = CameraPosition(
+          target: LatLng(value.latitude, value.longitude),
+          zoom: 14,
+        );
+        final GoogleMapController controller = await _controller.future;
+        controller
+            .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+        setState(() {});
+      });
+    } else {
+      getUserCurrentLocation().then((value) async {
+        _markers.add(Marker(
+            markerId: MarkerId("$latitude"),
+            position: LatLng(latitude, longitude),
+            draggable: true,
+            infoWindow: const InfoWindow(
+              title: 'My Current Location',
+            ),
+            onDragEnd: ((newPosition) {
+              setState(() {
+                latitude = newPosition.latitude;
+                longitude = newPosition.longitude;
+              });
+            })));
+        CameraPosition cameraPosition = CameraPosition(
+          target: LatLng(latitude, longitude),
+          zoom: 14,
+        );
+        final GoogleMapController controller = await _controller.future;
+        controller
+            .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+        setState(() {});
+      });
+    }
   }
 
   @override
@@ -148,7 +174,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
       resizeToAvoidBottomInset: true,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(63.h),
-        child: CustomAppBar(title: widget.title??'اضافة عيادة جديدة'),
+        child: CustomAppBar(title: widget.title ?? 'اضافة عيادة جديدة'),
       ),
       body: Form(
         key: formKey,
@@ -605,34 +631,31 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
               onPressed: () {
                 if (formKey.currentState!.validate()) {
                   if (widget.clinic?.id != null) {
-                    controller.updateClinic(
-                      {
-                        "name": clinicNameController.text,
-                        "doctor_name": doctorNameController.text,
-                        "mobile_number": mobileNumController.text,
-                        "telephone_number": phoneNumController.text,
-                        "email": emailController.text,
-                        "whatsapp_number": whatsappController.text,
-                        "address": clinicAddress.text,
-                        "clinic_type_id": clinicTypeId,
-                        "clinic_chairs": numOfChairs.text,
-                        "time_start": from.text,
-                        "time_end": to.text,
-                        "workdays[]": workDays,
-                        "city_id": cityId,
-                        "longitude": longitude,
-                        "latitude": latitude
-                      },
-                      widget.clinic?.id ?? 0,
-                        cardImage:!(clinicCard.startsWith("http://") ||
-                            clinicCard.startsWith("https://"))
+                    controller.updateClinic({
+                      "name": clinicNameController.text,
+                      "doctor_name": doctorNameController.text,
+                      "mobile_number": mobileNumController.text,
+                      "telephone_number": phoneNumController.text,
+                      "email": emailController.text,
+                      "whatsapp_number": whatsappController.text,
+                      "address": clinicAddress.text,
+                      "clinic_type_id": clinicTypeId,
+                      "clinic_chairs": numOfChairs.text,
+                      "time_start": from.text,
+                      "time_end": to.text,
+                      "workdays[]": workDays,
+                      "city_id": cityId,
+                      "longitude": longitude,
+                      "latitude": latitude
+                    }, widget.clinic?.id ?? 0,
+                        cardImage: !(clinicCard.startsWith("http://") ||
+                                clinicCard.startsWith("https://"))
                             ? File(clinicCard)
-                            : null ,
+                            : null,
                         logoImage: !(clinicLogo.startsWith("http://") ||
-                            clinicLogo.startsWith("https://"))
+                                clinicLogo.startsWith("https://"))
                             ? File(clinicLogo)
-                            : null
-                    );
+                            : null);
                   } else {
                     controller.addClinic({
                       "name": clinicNameController.text,
@@ -652,13 +675,12 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                       "latitude": latitude
                     },
                         cardImage: File(clinicCard),
-                        logoImage: File(clinicLogo)
-                             );
+                        logoImage: File(clinicLogo));
                   }
                   print("sssss$clinicLogo");
                 }
               },
-              text: widget.clinic != null?'تعديل ':'اضافة عيادة',
+              text: widget.clinic != null ? 'تعديل ' : 'اضافة عيادة',
               color: MyColors.greenColor,
               radius: 10,
             )
@@ -680,10 +702,10 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
   @override
   void onSuccess(dynamic) {
     // TODO: implement onSuccess
-    if(widget.clinic != null) {
+    if (widget.clinic != null) {
       ResponseClinic2 responseClinic2 = dynamic as ResponseClinic2;
       if (widget.onUpdate != null) widget.onUpdate!(responseClinic2.clinic);
-    }else{
+    } else {
       Clinic clinic = dynamic as Clinic;
       if (widget.onUpdate != null) widget.onUpdate!(clinic);
     }
@@ -712,7 +734,10 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                     SizedBox(
                       height: 26.h,
                     ),
-                    CustomText(widget.clinic != null?'تم التعديل بنجاح':'تم اضافة العيادة بنجاح',
+                    CustomText(
+                        widget.clinic != null
+                            ? 'تم التعديل بنجاح'
+                            : 'تم اضافة العيادة بنجاح',
                         size: 20.sp,
                         fontFamily: 'bold',
                         color: MyColors.mainColor,
@@ -723,7 +748,6 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                     CustomButton(
                       onPressed: () {
                         Navigator.pop(context);
-
                       },
                       color: MyColors.greenColor,
                       text: 'موافق',
