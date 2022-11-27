@@ -64,6 +64,7 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
                     desc: 'هل تريد بالتأكيد تسجيل خروج من التطبيق؟',
                     btnOkText: "تأكيد",
                     btnCancelText: "إلغاء",
+                    btnOkColor: MyColors.mainColor,
                     btnCancelOnPress: () {},
                     btnOkOnPress: () {
                       UserPreferences().logOut();
