@@ -395,6 +395,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                       }
                     },
                     onConfirm: (arr) {
+                      workDays.clear();
                       for (int i = 0; i < arr.length; i++) {
                         String hh = arr[i] as String;
                         workDays.add(hh);
@@ -625,6 +626,7 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
               CustomButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
+                    print("workdaysssss  $workDays");
                     if (widget.clinic?.id != null) {
                       controller.updateClinic({
                         "name": clinicNameController.text,

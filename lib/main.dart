@@ -50,6 +50,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences().initPreferences();
   isLogged = await UserPreferences().getBoolSF(Constants.isLogged);
+  await Future.delayed(const Duration(milliseconds: 300));
   initialScreen = //TestUi();
   getWidget({}, false);
   runApp(

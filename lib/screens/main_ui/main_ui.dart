@@ -82,7 +82,7 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
                     size: 18.sp,
                   ),
                 ),
-              )
+              ),
             ],
             bottom: TabBar(
               controller: tabController,

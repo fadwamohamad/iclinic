@@ -12,22 +12,23 @@ Widget Search(
     String? initialValueFilter,
     EdgeInsetsDirectional? padding,
     required searchPress(String)}) {
-  return Padding(
-    padding: padding ??
-        EdgeInsetsDirectional.only(
-            start: 15.w, end: 15.w, top: 5.h, bottom: bottom.h),
-    child: Expanded(
-        child: CustomTextField(
-      controller: searchEditingController,
-      fillColor: MyColors.whiteColor,
-      hintText: 'أدخل كلمة البحث',
-      suffixIcon: SvgPicture.asset('assets/icons/search.svg',
-          color: MyColors.greenColor, fit: BoxFit.scaleDown),
-      textInputType: TextInputType.text,
-      textInputAction: TextInputAction.search,
-      searchPress: (value) {
-        searchPress(value);
-      },
-    )),
+  return Flexible(
+    child: Padding(
+      padding: padding ??
+          EdgeInsetsDirectional.only(
+              start: 15.w, end: 15.w, top: 5.h, bottom: bottom.h),
+      child: CustomTextField(
+        controller: searchEditingController,
+        fillColor: MyColors.whiteColor,
+        hintText: 'أدخل كلمة البحث',
+        suffixIcon: SvgPicture.asset('assets/icons/search.svg',
+        color: MyColors.greenColor, fit: BoxFit.scaleDown),
+        textInputType: TextInputType.text,
+        textInputAction: TextInputAction.search,
+        searchPress: (value) {
+      searchPress(value);
+        },
+      ),
+    ),
   );
 }
