@@ -45,8 +45,11 @@ Widget visitsItem(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText(clinicName ?? "",
-                    size: 14, fontFamily: 'bold', color: MyColors.titlesColor),
+                SizedBox(
+                  width: 140.w,
+                  child: CustomText(clinicName ?? "",
+                      size: 14, fontFamily: 'bold', color: MyColors.titlesColor),
+                ),
                 CustomText('${visitsCount} زيارة',
                     size: 10, fontFamily: 'regular', color: MyColors.greenColor)
               ],

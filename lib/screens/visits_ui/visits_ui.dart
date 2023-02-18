@@ -24,67 +24,68 @@ class _VisitsUiState extends State<VisitsUi>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        toolbarHeight: 80,
+        title: Search(
+            context: context,
+            searchPress: (value) {
+              widget.map["search"] = value;
+              controller.getVisits(1, map: widget.map);
+              controller.rest.refresh();
+              //controller.visits.refresh();
+            },
+            searchEditingController: searchController),
+      ),
+
+      body: Container(
       padding: EdgeInsetsDirectional.only(top: 18.h, start: 17.w, end: 17.w),
       child: Obx(() {
-        return Column(
-          children: [
-            Search(
-                context: context,
-                searchPress: (value) {
-                  widget.map["search"] = value;
-                  controller.getVisits(1, map: widget.map);
-                  controller.rest.refresh();
-                  //controller.visits.refresh();
+        return ListGeneralUi(
+          status: controller.status.value,
+          rateHeight: 1.6,
+          onRest: controller.rest,
+          isMoreDataAvailable: controller.isMoreDataAvailable.value,
+          length: controller.visits.length,
+          error: controller.error.value,
+          onGetData: (page) async {
+            return await controller.getVisits(page, map: widget.map) ??
+                false;
+          },
+          pagination: false,
+          pullToRefresh: true,
+          itemBuilder: (context, index) {
+            return visitsItem(
+                clinicName: controller.visits[index].name,
+                clinicImage: controller.visits[index].logoUrl,
+                visitsCount: controller.visits[index].visitsCount ?? 0,
+                onTap: () {
+                  navigateTo(
+                      context,
+                      VisitInsideUi(
+                        clinicId: controller.visits[index].id ?? 0,
+                        clinicName: controller.visits[index].name,
+                        doctorName: controller.visits[index].doctorName,
+                        logo: controller.visits[index].logoUrl,
+                      ));
                 },
-                searchEditingController: searchController),
-            Expanded(
-              child: ListGeneralUi(
-                status: controller.status.value,
-                rateHeight: 1.6,
-                onRest: controller.rest,
-                isMoreDataAvailable: controller.isMoreDataAvailable.value,
-                length: controller.visits.length,
-                error: controller.error.value,
-                onGetData: (page) async {
-                  return await controller.getVisits(page, map: widget.map) ??
-                      false;
-                },
-                pagination: false,
-                pullToRefresh: true,
-                itemBuilder: (context, index) {
-                  return visitsItem(
-                      clinicName: controller.visits[index].name,
-                      clinicImage: controller.visits[index].logoUrl,
-                      visitsCount: controller.visits[index].visitsCount ?? 0,
-                      onTap: () {
-                        navigateTo(
-                            context,
-                            VisitInsideUi(
-                              clinicId: controller.visits[index].id ?? 0,
-                              clinicName: controller.visits[index].name,
-                              doctorName: controller.visits[index].doctorName,
-                              logo: controller.visits[index].logoUrl,
-                            ));
-                      },
-                      onAdd: () {
-                        navigateTo(
-                            context,
-                            AddVisitUi(
-                              clinicId: controller.visits[index].id ?? 0,
-                              clinicName: controller.visits[index].name,
-                              doctorName: controller.visits[index].doctorName,
-                              clinicLogo: controller.visits[index].logoUrl,
-                              onUpdate: (item) {},
-                            ));
-                      });
-                },
-              ),
-            )
-          ],
+                onAdd: () {
+                  navigateTo(
+                      context,
+                      AddVisitUi(
+                        clinicId: controller.visits[index].id ?? 0,
+                        clinicName: controller.visits[index].name,
+                        doctorName: controller.visits[index].doctorName,
+                        clinicLogo: controller.visits[index].logoUrl,
+                        onUpdate: (item) {},
+                      ));
+                });
+          },
         );
       }),
-    );
+    ));
   }
 
   @override

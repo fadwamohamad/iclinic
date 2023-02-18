@@ -21,6 +21,7 @@ import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import '../../utils/helpers.dart';
+import '../../widgets/validate_function.dart';
 
 class AddClinicUi extends StatefulWidget {
   Clinic? clinic;
@@ -119,6 +120,10 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
 
     if (widget.clinic == null) {
       getUserCurrentLocation().then((value) async {
+        setState(() {
+          latitude = value.latitude;
+          longitude = value.longitude;
+        });
         _markers.add(Marker(
             markerId: MarkerId("$latitude"),
             position: LatLng(value.latitude, value.longitude),
@@ -230,11 +235,14 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                 hintText: 'ادخل اسم العيادة',
                 textInputType: TextInputType.text,
                 textInputAction: TextInputAction.next,
+                validator:(value){
+                 return  ValidateFunctions().validateEmpty(value!);
+                } ,
               ),
               SizedBox(
                 height: 18.h,
               ),
-              CustomText('اسم الطبيب',
+              CustomText('اسم الطبيب صاحب العيادة',
                   color: MyColors.textColor,
                   size: 12,
                   padding: EdgeInsetsDirectional.only(start: 17.w)),
@@ -245,7 +253,11 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                   controller: doctorNameController,
                   hintText: 'ادخل اسم الطبيب',
                   textInputAction: TextInputAction.next,
-                  textInputType: TextInputType.text),
+                  textInputType: TextInputType.text,
+                  validator:(value){
+                    return  ValidateFunctions().validateEmpty(value!);
+                  }
+              ),
               SizedBox(
                 height: 18.h,
               ),
@@ -260,7 +272,11 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                   controller: mobileNumController,
                   hintText: 'ادخل رقم الجوال',
                   textInputAction: TextInputAction.next,
-                  textInputType: TextInputType.phone),
+                  textInputType: TextInputType.phone,
+                  validator:(value){
+                    return  ValidateFunctions().validateEmpty(value!);
+                  }
+              ),
               SizedBox(
                 height: 18.h,
               ),
@@ -389,11 +405,11 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
                           color: MyColors.hintColor,
                           fontFamily: 'regular'),
                     ),
-                    validator: (values) {
-                      if (values == null || values.isEmpty) {
-                        return "مطلوب";
-                      }
-                    },
+                    // validator: (values) {
+                    //   if (values == null || values.isEmpty) {
+                    //     return "مطلوب";
+                    //   }
+                    // },
                     onConfirm: (arr) {
                       workDays.clear();
                       for (int i = 0; i < arr.length; i++) {
@@ -689,7 +705,9 @@ class _AddClinicUiState extends State<AddClinicUi> implements SuccessInterface {
 
   Future<Position> getUserCurrentLocation() async {
     await Geolocator.requestPermission()
-        .then((value) {})
+        .then((value) {
+
+    })
         .onError((error, stackTrace) async {
       await Geolocator.requestPermission();
     });

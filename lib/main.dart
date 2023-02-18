@@ -75,6 +75,7 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           return MaterialApp(
             title: 'Flutter Demo',
+            navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             locale: DevicePreview.locale(context),
             theme: ThemeData(

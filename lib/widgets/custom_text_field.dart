@@ -90,24 +90,25 @@ class _CustomTextFieldState extends State<CustomTextField> {
         onFieldSubmitted: (value) {
           widget.searchPress!(value);
         },
-        validator: widget.validator != null
-            ? widget.validator
-            : (value) {
-                if (widget.textInputType == TextInputType.text) {
-                  return ValidateFunctions().validateEmpty(value!);
-                } else if (widget.textInputType == TextInputType.number) {
-                  return ValidateFunctions().validateEmpty(value!);
-                } else if (widget.textInputType ==
-                    TextInputType.visiblePassword) {
-                  return ValidateFunctions().validatePassword(value!);
-                } else if (widget.textInputType == TextInputType.phone) {
-                  return ValidateFunctions().validateMobile(value!);
-                } else if (widget.textInputType == TextInputType.emailAddress) {
-                  return ValidateFunctions().validateEmail(value!);
-                } else {
-                  return null;
-                }
-              },
+        validator:// widget.validator != null
+            //?
+          widget.validator,
+            // : (value) {
+            //     if (widget.textInputType == TextInputType.text) {
+            //       return ValidateFunctions().validateEmpty(value!);
+            //     } else if (widget.textInputType == TextInputType.number) {
+            //       return ValidateFunctions().validateEmpty(value!);
+            //     } else if (widget.textInputType ==
+            //         TextInputType.visiblePassword) {
+            //       return ValidateFunctions().validatePassword(value!);
+            //     } else if (widget.textInputType == TextInputType.phone) {
+            //       return ValidateFunctions().validateMobile(value!);
+            //     // } else if (widget.textInputType == TextInputType.emailAddress) {
+            //     //   return ValidateFunctions().validateEmail(value!);
+            //     } else {
+            //       return null;
+            //     }
+            //   },
         onChanged: (str) {
           setState(() {
             widget.text = str;

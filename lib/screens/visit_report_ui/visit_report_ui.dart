@@ -251,7 +251,7 @@ class _VisitReportUiState extends State<VisitReportUi>
                           another_app = check ?? false;
                         });
                       })),
-              CustomText("هل هناك تطبيق آخر؟",
+              CustomText("هل هناك برنامج آخر تستخدمه العيادة؟",
                   size: 14.sp, color: MyColors.blackColor),
             ],
           ),

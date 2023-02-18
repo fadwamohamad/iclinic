@@ -47,6 +47,9 @@ class _MainUiState extends State<MainUi> with SingleTickerProviderStateMixin {
           }
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          extendBody: false,
+          extendBodyBehindAppBar: false,
           appBar: AppBar(
             title: CustomText('الرئيسية',
                 size: 20.sp, fontFamily: 'bold', color: MyColors.titlesColor),

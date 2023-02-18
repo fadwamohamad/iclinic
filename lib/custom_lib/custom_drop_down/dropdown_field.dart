@@ -7,6 +7,7 @@ class _DropDownField extends StatefulWidget {
   final TextEditingController controller;
   final VoidCallback onTap;
   final Function(dynamic)? onChanged;
+  final FormFieldValidator<String>? validator;
   final String? hintText;
   final TextStyle? hintStyle;
   final TextStyle? style;
@@ -37,6 +38,7 @@ class _DropDownField extends StatefulWidget {
     this.errorBorderSide,
     this.borderRadius,
     this.fillColor,
+    this.validator
   }) : super(key: key);
 
   @override
@@ -117,9 +119,10 @@ class _DropDownFieldState extends State<_DropDownField> {
     return widget.prefixIcon != null
         ? TextFormField(
           controller: widget.controller,
-          validator: (val) {
-            if (val?.isEmpty ?? false) return widget.errorText ?? '';
-          },
+           validator: widget.validator,
+      // (val) {
+          //   if (val?.isEmpty ?? false) return widget.errorText ?? '';
+          // },
           readOnly: true,
           onTap: widget.onTap,
           onChanged: widget.onChanged,
@@ -149,9 +152,10 @@ class _DropDownFieldState extends State<_DropDownField> {
         )
         : TextFormField(
           controller: widget.controller,
-          validator: (val) {
-            if (val?.isEmpty ?? false) return widget.errorText ?? '';
-          },
+           validator: widget.validator,
+      // (val) {
+          //   if (val?.isEmpty ?? false) return widget.errorText ?? '';
+          // },
           readOnly: true,
           onTap: widget.onTap,
           onChanged: widget.onChanged,

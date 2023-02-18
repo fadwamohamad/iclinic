@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:iclinic/main.dart';
 import 'package:iclinic/widgets/cached_network_image.dart';
 import '../response/response_add_clinic.dart';
 import '../utils/colors.dart';
@@ -45,8 +46,11 @@ Widget clinicsItem(Clinic? item,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText(clinicName ?? "",
-                  size: 14, fontFamily: 'bold', color: MyColors.titlesColor),
+              SizedBox(
+                width: MediaQuery.of(MyApp.navigatorKey.currentState!.context).size.width/4,
+                child: CustomText(clinicName ?? "",
+                    size: 14, fontFamily: 'bold', color: MyColors.titlesColor),
+              ),
               CustomText('د. $doctorName',
                   size: 10, fontFamily: 'regular', color: MyColors.grey1Color)
             ],
